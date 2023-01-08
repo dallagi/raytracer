@@ -65,6 +65,19 @@ impl ops::Add<Tuple> for Tuple {
     }
 }
 
+impl ops::Sub<Tuple> for Tuple {
+    type Output = Tuple;
+
+    fn sub(self, rhs: Tuple) -> Self::Output {
+        Tuple::new(
+            self.x - rhs.x,
+            self.y - rhs.y,
+            self.z - rhs.z,
+            self.w - rhs.w,
+        )
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -111,5 +124,29 @@ mod tests {
         let t2 = Tuple::new(-2.0, 3.0, 1.0, 0.0);
 
         assert_eq!(Tuple::new(1.0, 1.0, 6.0, 1.0), t1 + t2);
+    }
+
+    #[test]
+    fn substract_two_points() {
+        let p1 = Tuple::point(3.0, 2.0, 1.0);
+        let p2 = Tuple::point(5.0, 6.0, 7.0);
+
+        assert_eq!(Tuple::vector(-2.0, -4.0, -6.0), p1 - p2);
+    }
+
+    #[test]
+    fn substract_vector_from_point() {
+        let point = Tuple::point(3.0, 2.0, 1.0);
+        let vector = Tuple::vector(5.0, 6.0, 7.0);
+
+        assert_eq!(Tuple::point(-2.0, -4.0, -6.0), point - vector);
+    }
+
+    #[test]
+    fn substract_two_vectors() {
+        let point = Tuple::vector(3.0, 2.0, 1.0);
+        let vector = Tuple::vector(5.0, 6.0, 7.0);
+
+        assert_eq!(Tuple::vector(-2.0, -4.0, -6.0), point - vector);
     }
 }
