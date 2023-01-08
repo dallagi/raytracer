@@ -1,4 +1,6 @@
+use crate::f_equals::FEquals;
 use crate::tuple::Kind::{Point, Undefined, Vector};
+use std::ops;
 
 #[derive(Debug, PartialEq)]
 enum Kind {
@@ -43,10 +45,23 @@ impl Tuple {
 
     pub fn kind(&self) -> Kind {
         match self.w {
-            w if w == W_VECTOR => Vector,
-            w if w == W_POINT => Point,
+            w if w.f_equals(W_VECTOR) => Vector,
+            w if w.f_equals(W_POINT) => Point,
             _ => Undefined,
         }
+    }
+}
+
+impl ops::Add<Tuple> for Tuple {
+    type Output = Tuple;
+
+    fn add(self, rhs: Tuple) -> Self::Output {
+        Tuple::new(
+            self.x + rhs.x,
+            self.y + rhs.y,
+            self.z + rhs.z,
+            self.w + rhs.w,
+        )
     }
 }
 
@@ -88,5 +103,13 @@ mod tests {
         let v = Tuple::vector(4.0, -4.0, 3.0);
 
         assert_eq!(Tuple::new(4.0, -4.0, 3.0, 0.0), v);
+    }
+
+    #[test]
+    fn add_two_touples() {
+        let t1 = Tuple::new(3.0, -2.0, 5.0, 1.0);
+        let t2 = Tuple::new(-2.0, 3.0, 1.0, 0.0);
+
+        assert_eq!(Tuple::new(1.0, 1.0, 6.0, 1.0), t1 + t2);
     }
 }
