@@ -1,7 +1,7 @@
 use crate::{f_equals::FEquals, vector::Vector};
 use std::ops;
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 pub struct Point {
     pub x: f32,
     pub y: f32,

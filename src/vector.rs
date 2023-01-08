@@ -2,7 +2,7 @@ use std::ops;
 
 use crate::f_equals::FEquals;
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 pub struct Vector {
     pub x: f32,
     pub y: f32,
