@@ -35,6 +35,16 @@ impl Vector {
     pub fn dot(&self, other: &Self) -> f32 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
+
+    /// Cross product
+    /// Returns a vector that is perpendicular to the two input vectors
+    pub fn cross(&self, other: &Self) -> Self {
+        Self::new(
+            self.y * other.z - self.z * other.y,
+            self.z * other.x - self.x * other.z,
+            self.x * other.y - self.y * other.x,
+        )
+    }
 }
 
 impl PartialEq for Vector {
@@ -150,5 +160,14 @@ mod tests {
         let v2 = Vector::new(2.0, 3.0, 4.0);
 
         assert_eq!(20.0, v1.dot(&v2))
+    }
+
+    #[test]
+    fn cross_product_returns_vector() {
+        let v1 = Vector::new(1.0, 2.0, 3.0);
+        let v2 = Vector::new(2.0, 3.0, 4.0);
+
+        assert_eq!(Vector::new(-1.0, 2.0, -1.0), v1.cross(&v2));
+        assert_eq!(Vector::new(1.0, -2.0, 1.0), v2.cross(&v1));
     }
 }
