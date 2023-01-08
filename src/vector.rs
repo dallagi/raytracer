@@ -26,6 +26,15 @@ impl Vector {
 
         Self::new(self.x / magnitude, self.y / magnitude, self.z / magnitude)
     }
+
+    /// Dot product
+    /// The smaller the dot product, the larger the angle between the two vectors
+    /// If two unit vectors have same dot product, they are the same
+    /// If dot product is -1, vectors point in opposite directions
+    /// Dot product of two unit vectors is the cosine of the angle between them
+    pub fn dot(&self, other: &Self) -> f32 {
+        self.x * other.x + self.y * other.y + self.z * other.z
+    }
 }
 
 impl PartialEq for Vector {
@@ -133,5 +142,13 @@ mod tests {
             vector.normalize()
         );
         assert!(vector.normalize().magnitude().f_equals(1.0));
+    }
+
+    #[test]
+    fn dot_product_is_sum_of_products_of_components_of_vector() {
+        let v1 = Vector::new(1.0, 2.0, 3.0);
+        let v2 = Vector::new(2.0, 3.0, 4.0);
+
+        assert_eq!(20.0, v1.dot(&v2))
     }
 }
