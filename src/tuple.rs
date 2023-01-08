@@ -78,6 +78,40 @@ impl ops::Sub<Tuple> for Tuple {
     }
 }
 
+impl ops::Neg for Tuple {
+    type Output = Tuple;
+
+    fn neg(self) -> Self::Output {
+        Tuple::new(-self.x, -self.y, -self.z, -self.w)
+    }
+}
+
+impl ops::Mul<f32> for Tuple {
+    type Output = Tuple;
+
+    fn mul(self, factor: f32) -> Self::Output {
+        Tuple::new(
+            self.x * factor,
+            self.y * factor,
+            self.z * factor,
+            self.w * factor,
+        )
+    }
+}
+
+impl ops::Div<f32> for Tuple {
+    type Output = Tuple;
+
+    fn div(self, factor: f32) -> Self::Output {
+        Tuple::new(
+            self.x / factor,
+            self.y / factor,
+            self.z / factor,
+            self.w / factor,
+        )
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -119,7 +153,7 @@ mod tests {
     }
 
     #[test]
-    fn add_two_touples() {
+    fn adding_two_touples() {
         let t1 = Tuple::new(3.0, -2.0, 5.0, 1.0);
         let t2 = Tuple::new(-2.0, 3.0, 1.0, 0.0);
 
@@ -148,5 +182,26 @@ mod tests {
         let vector = Tuple::vector(5.0, 6.0, 7.0);
 
         assert_eq!(Tuple::vector(-2.0, -4.0, -6.0), point - vector);
+    }
+
+    #[test]
+    fn negate_tuple() {
+        let tuple = Tuple::new(1.0, -2.0, 3.0, -4.0);
+
+        assert_eq!(Tuple::new(-1.0, 2.0, -3.0, 4.0), -tuple);
+    }
+
+    #[test]
+    fn multiply_tuple_by_scalar() {
+        let tuple = Tuple::new(1.0, -2.0, 3.0, -4.0);
+
+        assert_eq!(Tuple::new(3.5, -7.0, 10.5, -14.0), tuple * 3.5);
+    }
+
+    #[test]
+    fn divide_tuple_by_scalar() {
+        let tuple = Tuple::new(1.0, -2.0, 3.0, -4.0);
+
+        assert_eq!(Tuple::new(0.5, -1.0, 1.5, -2.0), tuple / 2.0);
     }
 }
