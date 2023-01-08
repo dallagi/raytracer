@@ -15,13 +15,13 @@ impl Vector {
     }
 
     /// Length of the vector
-    pub fn magnitude(&self) -> f32 {
+    pub fn magnitude(self) -> f32 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt() as f32
     }
 
     /// Convert into unit vector
     /// ie. into vector with magnitude 1
-    pub fn normalize(&self) -> Self {
+    pub fn normalize(self) -> Self {
         let magnitude = self.magnitude();
 
         Self::new(self.x / magnitude, self.y / magnitude, self.z / magnitude)
@@ -32,13 +32,13 @@ impl Vector {
     /// If two unit vectors have same dot product, they are the same
     /// If dot product is -1, vectors point in opposite directions
     /// Dot product of two unit vectors is the cosine of the angle between them
-    pub fn dot(&self, other: &Self) -> f32 {
+    pub fn dot(self, other: Self) -> f32 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
     /// Cross product
     /// Returns a vector that is perpendicular to the two input vectors
-    pub fn cross(&self, other: &Self) -> Self {
+    pub fn cross(self, other: Self) -> Self {
         Self::new(
             self.y * other.z - self.z * other.y,
             self.z * other.x - self.x * other.z,
@@ -159,7 +159,7 @@ mod tests {
         let v1 = Vector::new(1.0, 2.0, 3.0);
         let v2 = Vector::new(2.0, 3.0, 4.0);
 
-        assert_eq!(20.0, v1.dot(&v2))
+        assert_eq!(20.0, v1.dot(v2))
     }
 
     #[test]
@@ -167,7 +167,7 @@ mod tests {
         let v1 = Vector::new(1.0, 2.0, 3.0);
         let v2 = Vector::new(2.0, 3.0, 4.0);
 
-        assert_eq!(Vector::new(-1.0, 2.0, -1.0), v1.cross(&v2));
-        assert_eq!(Vector::new(1.0, -2.0, 1.0), v2.cross(&v1));
+        assert_eq!(Vector::new(-1.0, 2.0, -1.0), v1.cross(v2));
+        assert_eq!(Vector::new(1.0, -2.0, 1.0), v2.cross(v1));
     }
 }
