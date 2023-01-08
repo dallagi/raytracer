@@ -50,6 +50,10 @@ impl Tuple {
             _ => Undefined,
         }
     }
+
+    pub fn magnitude(&self) -> f32 {
+        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2) + self.w.powi(2)).sqrt() as f32
+    }
 }
 
 impl ops::Add<Tuple> for Tuple {
@@ -203,5 +207,18 @@ mod tests {
         let tuple = Tuple::new(1.0, -2.0, 3.0, -4.0);
 
         assert_eq!(Tuple::new(0.5, -1.0, 1.5, -2.0), tuple / 2.0);
+    }
+
+    #[test]
+    fn calculate_magnitude_of_vector() {
+        assert!(1.0.f_equals(Tuple::vector(1.0, 0.0, 0.0).magnitude()));
+        assert!(1.0.f_equals(Tuple::vector(0.0, 1.0, 0.0).magnitude()));
+        assert!(1.0.f_equals(Tuple::vector(0.0, 0.0, 1.0).magnitude()));
+        assert!((14.0 as f64)
+            .sqrt()
+            .f_equals(Tuple::vector(1.0, 2.0, 3.0).magnitude() as f64));
+        assert!((14.0 as f64)
+            .sqrt()
+            .f_equals(Tuple::vector(-1.0, -2.0, -3.0).magnitude() as f64));
     }
 }
