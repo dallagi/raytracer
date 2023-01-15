@@ -1,4 +1,5 @@
 use std::fs::File;
+use std::io::BufWriter;
 
 /// A simple example from chapter 2 on plotting on a canvas.
 /// Same as the example in `projectile.rs`, but in this case we plot the
@@ -51,7 +52,9 @@ fn main() {
     }
 
     println!("Projectile ended at position {:?}", projectile.position);
-    let file = File::create("examples/projectile_plot.ppm").expect("Failed to create file");
+    let file = BufWriter::new(
+        File::create("examples/projectile_plot.ppm").expect("Failed to create file"),
+    );
     let mut ppm_writer = PpmWriter::from_writer(file);
 
     println!("Writing to file...");
