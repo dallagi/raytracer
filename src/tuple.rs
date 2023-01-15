@@ -1,4 +1,4 @@
-use crate::f_equals::FEquals;
+use crate::float_eq::FloatEq;
 use crate::tuple::Kind::{Point, Undefined, Vector};
 use std::ops;
 
@@ -45,8 +45,8 @@ impl Tuple {
 
     pub fn kind(&self) -> Kind {
         match self.w {
-            w if w.f_equals(W_VECTOR) => Vector,
-            w if w.f_equals(W_POINT) => Point,
+            w if w.float_eq(W_VECTOR) => Vector,
+            w if w.float_eq(W_POINT) => Point,
             _ => Undefined,
         }
     }
@@ -211,14 +211,14 @@ mod tests {
 
     #[test]
     fn calculate_magnitude_of_vector() {
-        assert!(1.0.f_equals(Tuple::vector(1.0, 0.0, 0.0).magnitude()));
-        assert!(1.0.f_equals(Tuple::vector(0.0, 1.0, 0.0).magnitude()));
-        assert!(1.0.f_equals(Tuple::vector(0.0, 0.0, 1.0).magnitude()));
+        assert!(1.0.float_eq(Tuple::vector(1.0, 0.0, 0.0).magnitude()));
+        assert!(1.0.float_eq(Tuple::vector(0.0, 1.0, 0.0).magnitude()));
+        assert!(1.0.float_eq(Tuple::vector(0.0, 0.0, 1.0).magnitude()));
         assert!((14.0 as f64)
             .sqrt()
-            .f_equals(Tuple::vector(1.0, 2.0, 3.0).magnitude() as f64));
+            .float_eq(Tuple::vector(1.0, 2.0, 3.0).magnitude() as f64));
         assert!((14.0 as f64)
             .sqrt()
-            .f_equals(Tuple::vector(-1.0, -2.0, -3.0).magnitude() as f64));
+            .float_eq(Tuple::vector(-1.0, -2.0, -3.0).magnitude() as f64));
     }
 }

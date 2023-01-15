@@ -1,11 +1,11 @@
-pub trait FEquals {
-    fn f_equals(&self, rhs: Self) -> bool;
+pub trait FloatEq {
+    fn float_eq(&self, rhs: Self) -> bool;
 }
 
 const EPSILON: f32 = 0.000001;
 
-impl FEquals for f32 {
-    fn f_equals(&self, rhs: Self) -> bool {
+impl FloatEq for f32 {
+    fn float_eq(&self, rhs: Self) -> bool {
         let error_margin = EPSILON;
 
         if (self - rhs).abs() < error_margin {
@@ -16,8 +16,8 @@ impl FEquals for f32 {
     }
 }
 
-impl FEquals for f64 {
-    fn f_equals(&self, rhs: Self) -> bool {
+impl FloatEq for f64 {
+    fn float_eq(&self, rhs: Self) -> bool {
         let error_margin = EPSILON as f64;
 
         if (self - rhs).abs() < error_margin {

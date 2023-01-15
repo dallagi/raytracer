@@ -1,4 +1,4 @@
-use crate::{f_equals::FEquals, vector::Vector};
+use crate::{float_eq::FloatEq, vector::Vector};
 use std::ops;
 
 #[derive(Copy, Clone, Debug)]
@@ -16,7 +16,7 @@ impl Point {
 
 impl PartialEq for Point {
     fn eq(&self, other: &Self) -> bool {
-        self.x.f_equals(other.x) && self.y.f_equals(other.y) && self.z.f_equals(other.z)
+        self.x.float_eq(other.x) && self.y.float_eq(other.y) && self.z.float_eq(other.z)
     }
 }
 

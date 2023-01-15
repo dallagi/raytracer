@@ -1,6 +1,6 @@
 use std::ops;
 
-use crate::f_equals::FEquals;
+use crate::float_eq::FloatEq;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vector {
@@ -49,7 +49,7 @@ impl Vector {
 
 impl PartialEq for Vector {
     fn eq(&self, other: &Self) -> bool {
-        self.x.f_equals(other.x) && self.y.f_equals(other.y) && self.z.f_equals(other.z)
+        self.x.float_eq(other.x) && self.y.float_eq(other.y) && self.z.float_eq(other.z)
     }
 }
 
@@ -94,7 +94,7 @@ impl ops::Div<f32> for Vector {
 }
 
 mod tests {
-    use crate::f_equals::FEquals;
+    use crate::float_eq::FloatEq;
 
     use super::*;
 
@@ -129,29 +129,29 @@ mod tests {
 
     #[test]
     fn magnitude_is_sqrt_of_sum_of_squares_of_components() {
-        assert!(1.0.f_equals(Vector::new(1.0, 0.0, 0.0).magnitude()));
-        assert!(1.0.f_equals(Vector::new(0.0, 1.0, 0.0).magnitude()));
-        assert!(1.0.f_equals(Vector::new(0.0, 0.0, 1.0).magnitude()));
+        assert!(1.0.float_eq(Vector::new(1.0, 0.0, 0.0).magnitude()));
+        assert!(1.0.float_eq(Vector::new(0.0, 1.0, 0.0).magnitude()));
+        assert!(1.0.float_eq(Vector::new(0.0, 0.0, 1.0).magnitude()));
         assert!((14.0 as f64)
             .sqrt()
-            .f_equals(Vector::new(1.0, 2.0, 3.0).magnitude() as f64));
+            .float_eq(Vector::new(1.0, 2.0, 3.0).magnitude() as f64));
         assert!((14.0 as f64)
             .sqrt()
-            .f_equals(Vector::new(-1.0, -2.0, -3.0).magnitude() as f64));
+            .float_eq(Vector::new(-1.0, -2.0, -3.0).magnitude() as f64));
     }
 
     #[test]
     fn normalizing_converts_vector_into_unit_vector() {
         let vector = Vector::new(0.0, 0.0, 4.0);
         assert_eq!(Vector::new(0.0, 0.0, 1.0), vector.normalize());
-        assert!(vector.normalize().magnitude().f_equals(1.0));
+        assert!(vector.normalize().magnitude().float_eq(1.0));
 
         let vector = Vector::new(1.0, 2.0, 3.0);
         assert_eq!(
             Vector::new(0.26726124, 0.5345225, 0.8017837),
             vector.normalize()
         );
-        assert!(vector.normalize().magnitude().f_equals(1.0));
+        assert!(vector.normalize().magnitude().float_eq(1.0));
     }
 
     #[test]
