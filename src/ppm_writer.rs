@@ -134,6 +134,17 @@ mod tests {
         )
     }
 
+    #[test]
+    fn ppm_files_are_terminated_by_newline() {
+        let canvas = Canvas::new(5, 3);
+        let mut ppm_buffer: Vec<u8> = vec![];
+        let mut ppm_writer = PpmWriter::from_writer(&mut ppm_buffer);
+
+        ppm_writer.write_canvas(&canvas).unwrap();
+
+        assert_eq!(ppm_buffer.last(), Some(&('\n' as u8)))
+    }
+
     fn str_lines(buffer: &[u8]) -> Vec<&str> {
         let str_buffer = std::str::from_utf8(buffer).expect("Failed to parse string as utf-8");
         str_buffer.lines().collect()
