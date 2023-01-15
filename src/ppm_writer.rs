@@ -8,18 +8,19 @@ const MIN_PIXEL_VALUE: f32 = 0.0;
 const MAX_PIXEL_VALUE: f32 = 255.0;
 const MAX_BODY_ROW_LENGTH: usize = 70;
 
-struct PpmWriter<W: io::Write> {
+pub struct PpmWriter<W: io::Write> {
     writer: W,
 }
 
 impl<W: io::Write> PpmWriter<W> {
-    fn from_writer(writer: W) -> Self {
+    pub fn from_writer(writer: W) -> Self {
         Self { writer }
     }
 
-    fn write_canvas(&mut self, canvas: &Canvas) -> io::Result<()> {
+    pub fn write_canvas(&mut self, canvas: &Canvas) -> io::Result<()> {
         self.write_header(canvas)?;
         self.write_body(canvas)?;
+        self.writer.flush()?;
         Ok(())
     }
 
