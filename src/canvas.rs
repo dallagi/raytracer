@@ -1,5 +1,3 @@
-use std::ops::Deref;
-
 use ndarray::iter::AxisIter;
 use ndarray::prelude::*;
 use ndarray::Array2;
