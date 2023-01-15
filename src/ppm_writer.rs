@@ -2,12 +2,10 @@ use crate::canvas::Canvas;
 use std::io;
 use std::io::Write;
 
-// see https://users.rust-lang.org/t/generic-writer-file-string/51308/2
-
-const MAGIC_NUMBER: &[u8] = b"P3";
+const PPM_FLAVOR_IDENTIFIER: &[u8] = b"P3";
 const MIN_PIXEL_VALUE: f32 = 0.0;
 const MAX_PIXEL_VALUE: f32 = 255.0;
-const MAX_BODY_ROW_LENGTH: usize = 70;
+const MAX_PPM_BODY_ROW_LENGTH: usize = 70;
 
 pub struct PpmWriter<W: io::Write> {
     writer: io::BufWriter<W>,
@@ -28,7 +26,7 @@ impl<W: io::Write> PpmWriter<W> {
     }
 
     fn write_header(&mut self, canvas: &Canvas) -> Result<(), io::Error> {
-        self.writer.write(MAGIC_NUMBER)?;
+        self.writer.write(PPM_FLAVOR_IDENTIFIER)?;
         self.writer.write(b"\n")?;
         self.write_i32_as_str(canvas.width() as i32)?;
         self.writer.write(b" ")?;
@@ -36,7 +34,6 @@ impl<W: io::Write> PpmWriter<W> {
         self.writer.write(b"\n")?;
         self.write_i32_as_str(MAX_PIXEL_VALUE as i32)?;
         self.writer.write(b"\n")?;
-        self.writer.flush()?;
         Ok(())
     }
 
@@ -52,7 +49,7 @@ impl<W: io::Write> PpmWriter<W> {
                     let whitespace_size = 1;
 
                     if row_length + whitespace_size + component_formatted.len()
-                        > MAX_BODY_ROW_LENGTH
+                        > MAX_PPM_BODY_ROW_LENGTH
                     {
                         self.writer.write(b"\n")?;
                         row_length = 0;
@@ -60,6 +57,7 @@ impl<W: io::Write> PpmWriter<W> {
                     if row_length != 0 {
                         row_length += self.writer.write(b" ")?;
                     }
+
                     row_length += self.writer.write(component_formatted.as_bytes())?;
                 }
             }
@@ -85,9 +83,11 @@ mod tests {
     fn constructs_ppm_header() {
         let canvas = Canvas::new(5, 3);
         let mut ppm_buffer: Vec<u8> = vec![];
-        let mut ppm_writer = PpmWriter::from_writer(&mut ppm_buffer);
 
-        ppm_writer.write_canvas(&canvas).expect("Failed to write");
+        {
+            let mut ppm_writer = PpmWriter::from_writer(&mut ppm_buffer);
+            ppm_writer.write_canvas(&canvas).expect("Failed to write");
+        }
 
         assert_eq!(&["P3", "5 3", "255"], &str_lines(&ppm_buffer)[0..3])
     }
@@ -99,9 +99,11 @@ mod tests {
         canvas.write_pixel(2, 1, Color::new(0.0, 0.5, 0.0));
         canvas.write_pixel(4, 2, Color::new(-0.5, 0.0, 1.0));
         let mut ppm_buffer: Vec<u8> = vec![];
-        let mut ppm_writer = PpmWriter::from_writer(&mut ppm_buffer);
 
-        ppm_writer.write_canvas(&canvas).unwrap();
+        {
+            let mut ppm_writer = PpmWriter::from_writer(&mut ppm_buffer);
+            ppm_writer.write_canvas(&canvas).unwrap();
+        }
 
         assert_eq!(
             &[
@@ -123,9 +125,11 @@ mod tests {
         }
 
         let mut ppm_buffer: Vec<u8> = vec![];
-        let mut ppm_writer = PpmWriter::from_writer(&mut ppm_buffer);
 
-        ppm_writer.write_canvas(&canvas).unwrap();
+        {
+            let mut ppm_writer = PpmWriter::from_writer(&mut ppm_buffer);
+            ppm_writer.write_canvas(&canvas).unwrap();
+        }
 
         assert_eq!(
             &[
@@ -142,9 +146,11 @@ mod tests {
     fn ppm_files_are_terminated_by_newline() {
         let canvas = Canvas::new(5, 3);
         let mut ppm_buffer: Vec<u8> = vec![];
-        let mut ppm_writer = PpmWriter::from_writer(&mut ppm_buffer);
 
-        ppm_writer.write_canvas(&canvas).unwrap();
+        {
+            let mut ppm_writer = PpmWriter::from_writer(&mut ppm_buffer);
+            ppm_writer.write_canvas(&canvas).unwrap();
+        }
 
         assert_eq!(ppm_buffer.last(), Some(&('\n' as u8)))
     }
