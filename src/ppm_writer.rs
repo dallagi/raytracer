@@ -6,6 +6,7 @@ use std::io;
 const MAGIC_NUMBER: &[u8] = b"P3";
 const MIN_PIXEL_VALUE: f32 = 0.0;
 const MAX_PIXEL_VALUE: f32 = 255.0;
+const MAX_BODY_ROW_LENGTH: usize = 70;
 
 struct PpmWriter<W: io::Write> {
     writer: W,
@@ -37,31 +38,35 @@ impl<W: io::Write> PpmWriter<W> {
 
     fn write_body(&mut self, canvas: &Canvas) -> Result<(), io::Error> {
         for row in canvas.iter_rows() {
-            for (idx, pixel) in row.indexed_iter() {
+            let mut row_length = 0;
+
+            for pixel in row.iter() {
                 let pixel_scaled = pixel.scale(MIN_PIXEL_VALUE, MAX_PIXEL_VALUE);
 
-                self.write_i32_as_str(pixel_scaled.red.round() as i32)?;
-                self.writer.write(b" ")?;
-                self.write_i32_as_str(pixel_scaled.green.round() as i32)?;
-                self.writer.write(b" ")?;
-                self.write_i32_as_str(pixel_scaled.blue.round() as i32)?;
+                for component in [pixel_scaled.red, pixel_scaled.green, pixel_scaled.blue] {
+                    let component_formatted = (component.round() as i32).to_string();
+                    let whitespace_size = 1;
 
-                if !Self::last_pixel_in_row(idx, canvas) {
-                    self.writer.write(b" ")?;
+                    if row_length + whitespace_size + component_formatted.len()
+                        > MAX_BODY_ROW_LENGTH
+                    {
+                        self.writer.write(b"\n")?;
+                        row_length = 0;
+                    }
+                    if row_length != 0 {
+                        row_length += self.writer.write(b" ")?;
+                    }
+                    row_length += self.writer.write(component_formatted.as_bytes())?;
                 }
             }
+
             self.writer.write(b"\n")?;
         }
         Ok(())
     }
 
-    fn write_i32_as_str(&mut self, num: i32) -> Result<(), io::Error> {
-        self.writer.write(num.to_string().as_bytes())?;
-        Ok(())
-    }
-
-    fn last_pixel_in_row(idx: usize, canvas: &Canvas) -> bool {
-        idx == (canvas.width() - 1)
+    fn write_i32_as_str(&mut self, num: i32) -> Result<usize, io::Error> {
+        self.writer.write(num.to_string().as_bytes())
     }
 }
 
@@ -92,7 +97,7 @@ mod tests {
         let mut ppm_buffer: Vec<u8> = vec![];
         let mut ppm_writer = PpmWriter::from_writer(&mut ppm_buffer);
 
-        ppm_writer.write_canvas(&canvas)?;
+        ppm_writer.write_canvas(&canvas).unwrap();
 
         assert_eq!(
             &[
@@ -101,6 +106,31 @@ mod tests {
                 "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255"
             ],
             &str_lines(&ppm_buffer)[3..6]
+        )
+    }
+
+    #[test]
+    fn ppm_body_rows_larger_than_70_bytes_are_split() {
+        let mut canvas = Canvas::new(10, 2);
+        for x in 0..10 {
+            for y in 0..2 {
+                canvas.write_pixel(x, y, Color::new(1.0, 0.8, 0.6));
+            }
+        }
+
+        let mut ppm_buffer: Vec<u8> = vec![];
+        let mut ppm_writer = PpmWriter::from_writer(&mut ppm_buffer);
+
+        ppm_writer.write_canvas(&canvas).unwrap();
+
+        assert_eq!(
+            &[
+                "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204",
+                "153 255 204 153 255 204 153 255 204 153 255 204 153",
+                "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204",
+                "153 255 204 153 255 204 153 255 204 153 255 204 153"
+            ],
+            &str_lines(&ppm_buffer)[3..7]
         )
     }
 
