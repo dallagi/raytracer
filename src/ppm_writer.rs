@@ -1,5 +1,6 @@
 use crate::canvas::Canvas;
 use std::io;
+use std::io::Write;
 
 // see https://users.rust-lang.org/t/generic-writer-file-string/51308/2
 
@@ -9,12 +10,14 @@ const MAX_PIXEL_VALUE: f32 = 255.0;
 const MAX_BODY_ROW_LENGTH: usize = 70;
 
 pub struct PpmWriter<W: io::Write> {
-    writer: W,
+    writer: io::BufWriter<W>,
 }
 
 impl<W: io::Write> PpmWriter<W> {
     pub fn from_writer(writer: W) -> Self {
-        Self { writer }
+        Self {
+            writer: io::BufWriter::new(writer),
+        }
     }
 
     pub fn write_canvas(&mut self, canvas: &Canvas) -> io::Result<()> {
