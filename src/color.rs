@@ -1,7 +1,7 @@
 use crate::float_eq::FloatEq;
 use std::ops;
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 pub struct Color {
     pub red: f32,
     pub green: f32,
@@ -9,8 +9,12 @@ pub struct Color {
 }
 
 impl Color {
-    fn new(red: f32, green: f32, blue: f32) -> Self {
+    pub fn new(red: f32, green: f32, blue: f32) -> Self {
         Self { red, green, blue }
+    }
+
+    pub fn black() -> Self {
+        Color::new(0.0, 0.0, 0.0)
     }
 }
 
