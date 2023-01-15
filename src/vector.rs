@@ -163,7 +163,7 @@ mod tests {
     }
 
     #[test]
-    fn cross_product_returns_vector() {
+    fn cross_product_returns_vector_perpendicular_to_input_vectors() {
         let v1 = Vector::new(1.0, 2.0, 3.0);
         let v2 = Vector::new(2.0, 3.0, 4.0);
 
