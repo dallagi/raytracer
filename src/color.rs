@@ -16,6 +16,19 @@ impl Color {
     pub fn black() -> Self {
         Color::new(0.0, 0.0, 0.0)
     }
+
+    /// Scale color values between `min` and `max`
+    pub fn scale(&self, min: f32, max: f32) -> Self {
+        Self {
+            red: Self::scale_component(self.red, min, max),
+            green: Self::scale_component(self.green, min, max),
+            blue: Self::scale_component(self.blue, min, max),
+        }
+    }
+
+    fn scale_component(component: f32, min: f32, max: f32) -> f32 {
+        min + (component.clamp(0.0, 1.0) * (max - min))
+    }
 }
 
 impl PartialEq for Color {
@@ -76,6 +89,8 @@ impl ops::Mul for Color {
 mod tests {
     use super::*;
 
+    use pretty_assertions::assert_eq;
+
     #[test]
     fn colors_are_red_green_blue_tuples() {
         let color = Color::new(-0.5, 0.4, 1.7);
@@ -114,5 +129,19 @@ mod tests {
         let c2 = Color::new(0.9, 1.0, 0.1);
 
         assert_eq!(Color::new(0.9, 0.2, 0.04), c1 * c2)
+    }
+
+    #[test]
+    fn scales_normalized_color_to_given_scale() {
+        let color = Color::new(1.0, 0.0, 0.0);
+
+        assert_eq!(Color::new(255.0, 0.0, 0.0), color.scale(0.0, 255.0));
+    }
+
+    #[test]
+    fn scale_clamps_color_between_0_and_1_before_scaling() {
+        let color = Color::new(1.5, 0.0, -0.5);
+
+        assert_eq!(Color::new(255.0, 0.0, 0.0), color.scale(0.0, 255.0));
     }
 }

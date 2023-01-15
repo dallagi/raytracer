@@ -1,24 +1,26 @@
 use std::ops::Deref;
 
+use ndarray::iter::AxisIter;
 use ndarray::prelude::*;
 use ndarray::Array2;
+use ndarray::Dim;
 
 use crate::color::Color;
 
-struct Canvas(Array2<Color>);
+pub struct Canvas(pub Array2<Color>);
 
 impl Canvas {
     pub fn new(width: usize, height: usize) -> Self {
-        let array = Array2::from_elem((width, height), Color::black());
+        let array = Array2::from_elem((width, height).f(), Color::black());
         Self(array)
     }
 
-    fn width(&self) -> usize {
+    pub fn width(&self) -> usize {
         let (width, _height) = self.0.dim();
         width
     }
 
-    fn height(&self) -> usize {
+    pub fn height(&self) -> usize {
         let (_width, height) = self.0.dim();
         height
     }
@@ -30,6 +32,10 @@ impl Canvas {
     pub fn write_pixel(&mut self, x: usize, y: usize, color: Color) -> &Self {
         self.0[[x, y]] = color;
         self
+    }
+
+    pub fn iter_rows(&self) -> AxisIter<Color, Dim<[usize; 1]>> {
+        self.0.axis_iter(ndarray::Axis(1))
     }
 }
 
