@@ -2,28 +2,16 @@ pub trait FloatEq {
     fn float_eq(&self, rhs: Self) -> bool;
 }
 
-const EPSILON: f32 = 0.000001;
+const ERROR_MARGIN: f32 = 0.000001;
 
 impl FloatEq for f32 {
-    fn float_eq(&self, rhs: Self) -> bool {
-        let error_margin = EPSILON;
-
-        if (self - rhs).abs() < error_margin {
-            true
-        } else {
-            false
-        }
+    fn float_eq(&self, other: Self) -> bool {
+        (self - other).abs() < ERROR_MARGIN
     }
 }
 
 impl FloatEq for f64 {
-    fn float_eq(&self, rhs: Self) -> bool {
-        let error_margin = EPSILON as f64;
-
-        if (self - rhs).abs() < error_margin {
-            true
-        } else {
-            false
-        }
+    fn float_eq(&self, other: Self) -> bool {
+        (self - other).abs() < (ERROR_MARGIN as f64)
     }
 }
