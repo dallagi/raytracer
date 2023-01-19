@@ -1,39 +1,40 @@
-use ndarray::iter::AxisIter;
-use ndarray::prelude::*;
-use ndarray::Array2;
-use ndarray::Dim;
-
 use crate::color::Color;
 
-pub struct Canvas(pub Array2<Color>);
+pub struct Canvas {
+    pixels: Vec<Vec<Color>>,
+    width: usize,
+    height: usize,
+}
 
 impl Canvas {
     pub fn new(width: usize, height: usize) -> Self {
-        let array = Array2::from_elem((width, height).f(), Color::black());
-        Self(array)
+        let pixels = vec![vec![Color::black(); width]; height];
+        Self {
+            pixels,
+            width,
+            height,
+        }
     }
 
     pub fn width(&self) -> usize {
-        let (width, _height) = self.0.dim();
-        width
+        self.width
     }
 
     pub fn height(&self) -> usize {
-        let (_width, height) = self.0.dim();
-        height
+        self.height
     }
 
     pub fn pixel_at(&self, x: usize, y: usize) -> Color {
-        self.0[[x, y]]
+        self.pixels[y][x]
     }
 
     pub fn write_pixel(&mut self, x: usize, y: usize, color: Color) -> &Self {
-        self.0[[x, y]] = color;
+        self.pixels[y][x] = color;
         self
     }
 
-    pub fn iter_rows(&self) -> AxisIter<Color, Dim<[usize; 1]>> {
-        self.0.axis_iter(ndarray::Axis(1))
+    pub fn iter_rows(&self) -> std::slice::Iter<Vec<Color>> {
+        self.pixels.iter()
     }
 }
 
