@@ -49,12 +49,13 @@ fn main() {
         );
         projectile = tick(&environment, &projectile);
     }
-
     println!("Projectile ended at position {:?}", projectile.position);
-    let file = File::create("examples/projectile_plot.ppm").expect("Failed to create file");
+
+    let out_path = "examples/projectile_plot.ppm";
+    let file = File::create(out_path).expect("Failed to create file");
     let mut ppm_writer = PpmWriter::from_writer(file);
 
-    println!("Writing to file...");
+    println!("Writing to {out_path}");
     ppm_writer
         .write_canvas(&canvas)
         .expect("Failed to write to file");
