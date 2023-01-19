@@ -51,7 +51,7 @@ fn main() {
     }
     println!("Projectile ended at position {:?}", projectile.position);
 
-    let out_path = "examples/projectile_plot.ppm";
+    let out_path = "examples/out/projectile_plot.ppm";
     let file = File::create(out_path).expect("Failed to create file");
     let mut ppm_writer = PpmWriter::from_writer(file);
 
