@@ -13,6 +13,16 @@ impl<const ROWS: usize, const COLS: usize> Matrix<ROWS, COLS> {
     pub fn zeros() -> Self {
         Self([[0.0; COLS]; ROWS])
     }
+
+    pub fn transpose(self) -> Matrix<COLS, ROWS> {
+        let mut res: Matrix<COLS, ROWS> = Matrix::zeros();
+        for r in 0..ROWS {
+            for c in 0..COLS {
+                res[(c, r)] = self[(r, c)]
+            }
+        }
+        res
+    }
 }
 
 impl<const ROWS: usize> Matrix<ROWS, ROWS> {
@@ -199,6 +209,32 @@ mod tests {
             [5.0, 4.0, 3.0, 2.0],
         ]);
 
-        assert_eq!(matrix, matrix * Matrix::<4, 4>::identity())
+        assert_eq!(matrix, matrix * Matrix::<4, 4>::identity());
+    }
+
+    #[test]
+    fn transpose_inverts_rows_and_columns() {
+        let matrix = Matrix::new([
+            [0.0, 9.0, 3.0, 0.0],
+            [9.0, 8.0, 0.0, 8.0],
+            [1.0, 8.0, 5.0, 3.0],
+            [0.0, 0.0, 5.0, 8.0],
+        ]);
+
+        let expected_result = Matrix::new([
+            [0.0, 9.0, 1.0, 0.0],
+            [9.0, 8.0, 8.0, 0.0],
+            [3.0, 0.0, 5.0, 5.0],
+            [0.0, 8.0, 3.0, 8.0],
+        ]);
+        assert_eq!(expected_result, matrix.transpose())
+    }
+
+    #[test]
+    fn transposing_the_identity_matrix_returns_identity_matrix() {
+        assert_eq!(
+            Matrix::<4, 4>::identity(),
+            Matrix::<4, 4>::identity().transpose()
+        )
     }
 }
