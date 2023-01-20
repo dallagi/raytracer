@@ -475,4 +475,22 @@ mod tests {
         ]);
         assert_eq!(expected_inverse, matrix.inverse())
     }
+
+    #[test]
+    fn multiplying_a_product_by_its_inverse() {
+        let matrix_1 = Matrix::new([
+            [9.0, 3.0, 0.0, 9.0],
+            [-5.0, -2.0, -6.0, -3.0],
+            [-4.0, 9.0, 6.0, 4.0],
+            [-7.0, 6.0, 6.0, 2.0],
+        ]);
+        let matrix_2 = Matrix::new([
+            [8.0, -5.0, 9.0, 2.0],
+            [7.0, 5.0, 6.0, 1.0],
+            [-6.0, 0.0, 9.0, 6.0],
+            [-3.0, 0.0, -9.0, -4.0],
+        ]);
+
+        assert_eq!(matrix_1, matrix_1 * matrix_2 * matrix_2.inverse())
+    }
 }
