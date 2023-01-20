@@ -35,6 +35,12 @@ impl<const ROWS: usize> Matrix<ROWS, ROWS> {
     }
 }
 
+impl Matrix<2, 2> {
+    pub fn determinant(self) -> f32 {
+        self[(0, 0)] * self[(1, 1)] - self[(0, 1)] * self[(1, 0)]
+    }
+}
+
 impl<const ROWS: usize, const COLS: usize> ops::Index<(usize, usize)> for Matrix<ROWS, COLS> {
     type Output = f32;
 
@@ -236,5 +242,12 @@ mod tests {
             Matrix::<4, 4>::identity(),
             Matrix::<4, 4>::identity().transpose()
         )
+    }
+
+    #[test]
+    fn determinant_of_2x2_matrix() {
+        let matrix = Matrix::new([[1.0, 5.0], [-3.0, 2.0]]);
+
+        assert_eq!(17.0, matrix.determinant());
     }
 }
