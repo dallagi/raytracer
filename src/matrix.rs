@@ -15,6 +15,16 @@ impl<const ROWS: usize, const COLS: usize> Matrix<ROWS, COLS> {
     }
 }
 
+impl<const ROWS: usize> Matrix<ROWS, ROWS> {
+    pub fn identity() -> Self {
+        let mut res: Matrix<ROWS, ROWS> = Self::zeros();
+        for i in 0..ROWS {
+            res[(i, i)] = 1.0;
+        }
+        res
+    }
+}
+
 impl<const ROWS: usize, const COLS: usize> ops::Index<(usize, usize)> for Matrix<ROWS, COLS> {
     type Output = f32;
 
@@ -178,5 +188,17 @@ mod tests {
             [16.0, 26.0, 46.0, 42.0],
         ]);
         assert_eq!(expected_result, matrix_1 * matrix_2)
+    }
+
+    #[test]
+    fn multiplying_matrix_by_identity_matrix_returns_original_matrix() {
+        let matrix = Matrix::new([
+            [1.0, 2.0, 3.0, 4.0],
+            [5.0, 6.0, 7.0, 8.0],
+            [9.0, 8.0, 7.0, 6.0],
+            [5.0, 4.0, 3.0, 2.0],
+        ]);
+
+        assert_eq!(matrix, matrix * Matrix::<4, 4>::identity())
     }
 }
