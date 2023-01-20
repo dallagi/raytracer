@@ -23,6 +23,23 @@ impl<const ROWS: usize, const COLS: usize> Matrix<ROWS, COLS> {
         }
         res
     }
+
+    fn submatrix(
+        self,
+        row_to_delete: usize,
+        column_to_delete: usize,
+    ) -> Matrix<{ ROWS - 1 }, { COLS - 1 }> {
+        let mut res: Matrix<{ ROWS - 1 }, { COLS - 1 }> = Matrix::zeros();
+        for row in 0..(ROWS - 1) {
+            for col in 0..(COLS - 1) {
+                let source_row = if row < row_to_delete { row } else { row + 1 };
+                let source_col = if col < column_to_delete { col } else { col + 1 };
+
+                res[(row, col)] = self[(source_row, source_col)]
+            }
+        }
+        res
+    }
 }
 
 impl<const SIZE: usize> Matrix<SIZE, SIZE> {
@@ -38,6 +55,12 @@ impl<const SIZE: usize> Matrix<SIZE, SIZE> {
 impl Matrix<2, 2> {
     pub fn determinant(self) -> f32 {
         self[(0, 0)] * self[(1, 1)] - self[(0, 1)] * self[(1, 0)]
+    }
+}
+
+impl Matrix<3, 3> {
+    pub fn minor(self, row: usize, column: usize) -> f32 {
+        self.submatrix(row, column).determinant()
     }
 }
 
@@ -249,5 +272,37 @@ mod tests {
         let matrix = Matrix::new([[1.0, 5.0], [-3.0, 2.0]]);
 
         assert_eq!(17.0, matrix.determinant());
+    }
+
+    #[test]
+    fn submatrix_of_3x3_matrix_is_2x2_matrix() {
+        let matrix = Matrix::new([[1.0, 5.0, 0.0], [-3.0, 2.0, 7.0], [0.0, 6.0, -3.0]]);
+
+        assert_eq!(
+            Matrix::new([[-3.0, 2.0], [0.0, 6.0]]),
+            matrix.submatrix(0, 2)
+        )
+    }
+
+    #[test]
+    fn submatrix_of_4x4_matrix_is_3x3_matrix() {
+        let matrix = Matrix::new([
+            [-6.0, 1.0, 1.0, 6.0],
+            [-8.0, 5.0, 8.0, 6.0],
+            [-1.0, 0.0, 8.0, 2.0],
+            [-7.0, 1.0, -1.0, 1.0],
+        ]);
+
+        let expected_result = Matrix::new([[-6.0, 1.0, 6.0], [-8.0, 8.0, 6.0], [-7.0, -1.0, 1.0]]);
+        assert_eq!(expected_result, matrix.submatrix(2, 1))
+    }
+
+    #[test]
+    fn minor_of_3x3_matrix() {
+        let matrix = Matrix::new([[3.0, 5.0, 0.0], [2.0, -1.0, -7.0], [6.0, -1.0, 5.0]]);
+        let sub = matrix.submatrix(1, 0);
+
+        assert_eq!(25.0, sub.determinant());
+        assert_eq!(25.0, matrix.minor(1, 0));
     }
 }
