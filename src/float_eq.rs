@@ -2,7 +2,7 @@ pub trait FloatEq {
     fn float_eq(&self, rhs: Self) -> bool;
 }
 
-const ERROR_MARGIN: f32 = 0.000001;
+const ERROR_MARGIN: f32 = 0.00001;
 
 impl FloatEq for f32 {
     fn float_eq(&self, other: Self) -> bool {

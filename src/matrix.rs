@@ -102,6 +102,30 @@ impl Matrix<4, 4> {
             .map(|row| self[(row, 0)] * self.cofactor(row, 0))
             .sum()
     }
+
+    pub fn inverse(self) -> Self {
+        let determinant = self.determinant();
+        if determinant.float_eq(0.0) {
+            panic!("Cannot invert matrix with determinant 0");
+        }
+        let mut res = self.cofactor_matrix().transpose();
+        for r in 0..4 {
+            for c in 0..4 {
+                res[(r, c)] = res[(r, c)] / determinant;
+            }
+        }
+        res
+    }
+
+    fn cofactor_matrix(self) -> Self {
+        let mut res = Self::zeros();
+        for r in 0..4 {
+            for c in 0..4 {
+                res[(r, c)] = self.cofactor(r, c);
+            }
+        }
+        res
+    }
 }
 
 impl<const ROWS: usize, const COLS: usize> ops::Index<(usize, usize)> for Matrix<ROWS, COLS> {
@@ -282,7 +306,7 @@ mod tests {
     }
 
     #[test]
-    fn transpose_inverts_rows_and_columns() {
+    fn transpose_swaps_rows_and_columns() {
         let matrix = Matrix::new([
             [0.0, 9.0, 3.0, 0.0],
             [9.0, 8.0, 0.0, 8.0],
@@ -380,5 +404,39 @@ mod tests {
         assert_eq!(210.0, matrix.cofactor(0, 2));
         assert_eq!(51.0, matrix.cofactor(0, 3));
         assert_eq!(-4071.0, matrix.determinant());
+    }
+
+    #[test]
+    #[should_panic]
+    fn inversion_panics_when_matrix_is_not_invertible() {
+        let matrix = Matrix::new([
+            [-4.0, 2.0, -2.0, 3.0],
+            [9.0, 6.0, 2.0, 6.0],
+            [0.0, -5.0, 1.0, -5.0],
+            [0.0, 0.0, 0.0, 0.0],
+        ]);
+
+        matrix.inverse();
+    }
+
+    #[test]
+    fn calculates_inverse_of_matrix() {
+        let matrix = Matrix::new([
+            [-5.0, 2.0, 6.0, -8.0],
+            [1.0, -5.0, 1.0, 8.0],
+            [7.0, 7.0, -6.0, -7.0],
+            [1.0, -3.0, 7.0, 4.0],
+        ]);
+
+        let expected_inverse = Matrix::new([
+            [0.21805, 0.45113, 0.24060, -0.04511],
+            [-0.80827, -1.45677, -0.44361, 0.52068],
+            [-0.07895, -0.22368, -0.05263, 0.19737],
+            [-0.52256, -0.81391, -0.30075, 0.30639],
+        ]);
+        assert_eq!(532.0, matrix.determinant());
+        assert_eq!(-160.0, matrix.cofactor(2, 3));
+        assert!((-160.0 / 532.0).float_eq(expected_inverse[(3, 2)]));
+        assert_eq!(expected_inverse, matrix.inverse());
     }
 }
