@@ -72,6 +72,36 @@ impl Matrix<3, 3> {
             -res
         }
     }
+
+    pub fn determinant(self) -> f32 {
+        (0..3)
+            .map(|row| self[(row, 0)] * self.cofactor(row, 0))
+            .sum()
+    }
+}
+
+// Basically same as above, but I couldn't find a better way
+// to recurse with const generics...
+impl Matrix<4, 4> {
+    pub fn minor(self, row: usize, column: usize) -> f32 {
+        self.submatrix(row, column).determinant()
+    }
+
+    pub fn cofactor(self, row: usize, column: usize) -> f32 {
+        let res = self.minor(row, column);
+
+        if (row + column) % 2 == 0 {
+            res
+        } else {
+            -res
+        }
+    }
+
+    pub fn determinant(self) -> f32 {
+        (0..4)
+            .map(|row| self[(row, 0)] * self.cofactor(row, 0))
+            .sum()
+    }
 }
 
 impl<const ROWS: usize, const COLS: usize> ops::Index<(usize, usize)> for Matrix<ROWS, COLS> {
@@ -324,5 +354,31 @@ mod tests {
         assert_eq!(-12.0, matrix.cofactor(0, 0));
         assert_eq!(25.0, matrix.minor(1, 0));
         assert_eq!(-25.0, matrix.cofactor(1, 0));
+    }
+
+    #[test]
+    fn determinant_of_3x3_matrix() {
+        let matrix = Matrix::new([[1.0, 2.0, 6.0], [-5.0, 8.0, -4.0], [2.0, 6.0, 4.0]]);
+
+        assert_eq!(56.0, matrix.cofactor(0, 0));
+        assert_eq!(12.0, matrix.cofactor(0, 1));
+        assert_eq!(-46.0, matrix.cofactor(0, 2));
+        assert_eq!(-196.0, matrix.determinant());
+    }
+
+    #[test]
+    fn determinant_of_4x4_matrix() {
+        let matrix = Matrix::new([
+            [-2.0, -8.0, 3.0, 5.0],
+            [-3.0, 1.0, 7.0, 3.0],
+            [1.0, 2.0, -9.0, 6.0],
+            [-6.0, 7.0, 7.0, -9.0],
+        ]);
+
+        assert_eq!(690.0, matrix.cofactor(0, 0));
+        assert_eq!(447.0, matrix.cofactor(0, 1));
+        assert_eq!(210.0, matrix.cofactor(0, 2));
+        assert_eq!(51.0, matrix.cofactor(0, 3));
+        assert_eq!(-4071.0, matrix.determinant());
     }
 }
