@@ -25,10 +25,10 @@ impl<const ROWS: usize, const COLS: usize> Matrix<ROWS, COLS> {
     }
 }
 
-impl<const ROWS: usize> Matrix<ROWS, ROWS> {
+impl<const SIZE: usize> Matrix<SIZE, SIZE> {
     pub fn identity() -> Self {
-        let mut res: Matrix<ROWS, ROWS> = Self::zeros();
-        for i in 0..ROWS {
+        let mut res: Matrix<SIZE, SIZE> = Self::zeros();
+        for i in 0..SIZE {
             res[(i, i)] = 1.0;
         }
         res
