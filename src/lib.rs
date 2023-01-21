@@ -9,5 +9,5 @@ pub mod matrix;
 pub mod object;
 pub mod point;
 pub mod ppm_writer;
-mod ray;
+pub mod ray;
 pub mod vector;
