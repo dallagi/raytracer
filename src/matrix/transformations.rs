@@ -231,4 +231,33 @@ mod tests {
 
         assert_eq!(expected_result, transform * point);
     }
+
+    #[test]
+    fn individual_transformations_are_applied_in_sequence() {
+        let point = Point::new(1.0, 0.0, 1.0);
+        let rotate = rotation_x(PI / 2.0);
+        let scale = scaling(5.0, 5.0, 5.0);
+        let translate = translation(10.0, 5.0, 7.0);
+
+        let p2 = rotate * point;
+        assert_eq!(Point::new(1.0, -1.0, 0.0), p2);
+
+        let p3 = scale * p2;
+        assert_eq!(Point::new(5.0, -5.0, 0.0), p3);
+
+        let p4 = translate * p3;
+        assert_eq!(Point::new(15.0, 0.0, 7.0), p4);
+    }
+
+    #[test]
+    fn chained_transformations_must_be_applied_in_reverse_order() {
+        let point = Point::new(1.0, 0.0, 1.0);
+        let rotate = rotation_x(PI / 2.0);
+        let scale = scaling(5.0, 5.0, 5.0);
+        let translate = translation(10.0, 5.0, 7.0);
+
+        let chained_transformations = translate * scale * rotate;
+
+        assert_eq!(Point::new(15.0, 0.0, 7.0), chained_transformations * point);
+    }
 }
