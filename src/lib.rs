@@ -7,4 +7,5 @@ pub mod matrix;
 pub mod point;
 pub mod ppm_writer;
 mod ray;
+pub mod sphere;
 pub mod vector;
