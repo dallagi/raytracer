@@ -83,6 +83,14 @@ impl ops::Mul<Vector> for Matrix<4, 4> {
     }
 }
 
+impl ops::Shr<Matrix<4, 4>> for Matrix<4, 4> {
+    type Output = Matrix<4, 4>;
+
+    fn shr(self, other: Matrix<4, 4>) -> Self::Output {
+        other * self
+    }
+}
+
 #[cfg(test)]
 mod tests {
 

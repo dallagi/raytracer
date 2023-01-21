@@ -260,4 +260,16 @@ mod tests {
 
         assert_eq!(Point::new(15.0, 0.0, 7.0), chained_transformations * point);
     }
+
+    #[test]
+    fn chained_transformations_can_be_expressed_fluently_with_shr_operator() {
+        let point = Point::new(1.0, 0.0, 1.0);
+        let rotate = rotation_x(PI / 2.0);
+        let scale = scaling(5.0, 5.0, 5.0);
+        let translate = translation(10.0, 5.0, 7.0);
+
+        let chained_transformations = rotate >> scale >> translate;
+
+        assert_eq!(Point::new(15.0, 0.0, 7.0), chained_transformations * point);
+    }
 }
