@@ -3,6 +3,8 @@
 pub mod canvas;
 pub mod color;
 pub mod float_eq;
+pub mod intersection;
+pub mod intersections;
 pub mod matrix;
 pub mod point;
 pub mod ppm_writer;

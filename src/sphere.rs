@@ -1,7 +1,10 @@
-pub struct Sphere;
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub enum Object {
+    Sphere,
+}
 
-impl Sphere {
-    pub fn new() -> Self {
-        Sphere
+impl Object {
+    pub fn sphere() -> Self {
+        Self::Sphere
     }
 }

@@ -1,5 +1,7 @@
+use crate::intersection::Intersection;
+use crate::intersections::Intersections;
 use crate::point::Point;
-use crate::sphere::Sphere;
+use crate::sphere::Object;
 use crate::vector::Vector;
 
 #[derive(Copy, Clone)]
@@ -22,7 +24,7 @@ impl Ray {
     /// For single intersections (ie. tangent lines), it will return the same t two times.
     ///
     /// See https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
-    pub fn intersect_sphere(self, sphere: Sphere) -> Option<[f32; 2]> {
+    pub fn intersect(self, object: Object) -> Intersections {
         let sphere_center = Point::new(0.0, 0.0, 0.0);
         let sphere_center_to_ray = self.origin - sphere_center;
 
@@ -33,16 +35,16 @@ impl Ray {
         let discriminant = b.powf(2.0) - 4.0 * a * c;
 
         if discriminant < 0.0 {
-            return None;
+            return Intersections::empty();
         };
 
         let t1 = (-b - discriminant.sqrt()) / (2.0 * a);
         let t2 = (-b + discriminant.sqrt()) / (2.0 * a);
 
         if t1 < t2 {
-            Some([t1, t2])
+            Intersections::of(&[Intersection::new(t1, object), Intersection::new(t2, object)])
         } else {
-            Some([t2, t1])
+            Intersections::of(&[Intersection::new(t2, object), Intersection::new(t1, object)])
         }
     }
 }
@@ -77,41 +79,58 @@ mod tests {
     #[test]
     fn a_ray_can_intersect_a_sphere_at_two_points() {
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Sphere::new();
+        let sphere = Object::sphere();
 
         // t values at which the ray intersects the sphere
-        let intersect_ts = ray.intersect_sphere(sphere);
+        let intersections = ray.intersect(sphere);
 
-        assert_eq!(Some([4.0, 6.0]), intersect_ts)
+        assert_eq!(2, intersections.count());
+        assert_eq!(4.0, intersections[0].t);
+        assert_eq!(6.0, intersections[1].t);
     }
 
     #[test]
     fn a_ray_can_miss_a_sphere() {
         let ray = Ray::new(Point::new(0.0, 2.0, 5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Sphere::new();
+        let sphere = Object::sphere();
 
-        let intersect_ts = ray.intersect_sphere(sphere);
+        let intersect_ts = ray.intersect(sphere);
 
-        assert_eq!(None, intersect_ts)
+        assert_eq!(Intersections::empty(), intersect_ts)
     }
 
     #[test]
     fn a_ray_originating_inside_the_sphere_intersects_the_sphere_in_two_points() {
         let ray = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Sphere::new();
+        let sphere = Object::sphere();
 
-        let intersect_ts = ray.intersect_sphere(sphere);
+        let intersections = ray.intersect(sphere);
 
-        assert_eq!(Some([-1.0, 1.0]), intersect_ts)
+        assert_eq!(2, intersections.count());
+        assert_eq!(-1.0, intersections[0].t);
+        assert_eq!(1.0, intersections[1].t);
     }
 
     #[test]
     fn a_ray_can_intersect_a_sphere_behind_it_two_times() {
         let ray = Ray::new(Point::new(0.0, 0.0, 5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Sphere::new();
+        let sphere = Object::sphere();
 
-        let intersect_ts = ray.intersect_sphere(sphere);
+        let intersections = ray.intersect(sphere);
 
-        assert_eq!(Some([-6.0, -4.0]), intersect_ts)
+        assert_eq!(2, intersections.count());
+        assert_eq!(-6.0, intersections[0].t);
+        assert_eq!(-4.0, intersections[1].t);
+    }
+
+    #[test]
+    fn intersect_sets_the_object_of_the_intersection() {
+        let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
+        let sphere = Object::sphere();
+
+        let intersections = ray.intersect(sphere);
+
+        assert_eq!(sphere, intersections[0].object);
+        assert_eq!(sphere, intersections[1].object);
     }
 }
