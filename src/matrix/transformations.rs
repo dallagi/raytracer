@@ -52,12 +52,33 @@ pub fn rotation_z(radians: f32) -> Matrix<4, 4> {
     result
 }
 
+pub fn shearing(
+    x_to_y: f32,
+    x_to_z: f32,
+    y_to_x: f32,
+    y_to_z: f32,
+    z_to_x: f32,
+    z_to_y: f32,
+) -> Matrix<4, 4> {
+    let mut result: Matrix<4, 4> = Matrix::identity();
+
+    result[(0, 1)] = x_to_y;
+    result[(0, 2)] = x_to_z;
+    result[(1, 0)] = y_to_x;
+    result[(1, 2)] = y_to_z;
+    result[(2, 0)] = z_to_x;
+    result[(2, 1)] = z_to_y;
+
+    result
+}
+
 #[cfg(test)]
 mod tests {
     use std::f32::consts::PI;
 
     use crate::{point::Point, vector::Vector};
     use pretty_assertions::assert_eq;
+    use test_case::test_case;
 
     use super::*;
 
@@ -170,5 +191,44 @@ mod tests {
             half_quarter * point
         );
         assert_eq!(Point::new(-1.0, 0.0, 0.0), full_quarter * point);
+    }
+
+    #[test_case(
+        shearing(1.0, 0.0, 0.0, 0.0, 0.0, 0.0),
+        Point::new(5.0, 3.0, 4.0);
+        "x to y"
+    )]
+    #[test_case(
+        shearing(0.0, 1.0, 0.0, 0.0, 0.0, 0.0),
+        Point::new(6.0, 3.0, 4.0);
+        "x to z"
+    )]
+    #[test_case(
+        shearing(0.0, 0.0, 1.0, 0.0, 0.0, 0.0),
+        Point::new(2.0, 5.0, 4.0);
+        "y to x"
+    )]
+    #[test_case(
+        shearing(0.0, 0.0, 0.0, 1.0, 0.0, 0.0),
+        Point::new(2.0, 7.0, 4.0);
+        "y to z"
+    )]
+    #[test_case(
+        shearing(0.0, 0.0, 0.0, 0.0, 1.0, 0.0),
+        Point::new(2.0, 3.0, 6.0);
+        "z to x"
+    )]
+    #[test_case(
+        shearing(0.0, 0.0, 0.0, 0.0, 0.0, 1.0),
+        Point::new(2.0, 3.0, 7.0);
+        "z to y"
+    )]
+    fn shearing_moves_an_axis_in_proportion_to_another_axis(
+        transform: Matrix<4, 4>,
+        expected_result: Point,
+    ) {
+        let point = Point::new(2.0, 3.0, 4.0);
+
+        assert_eq!(expected_result, transform * point);
     }
 }
