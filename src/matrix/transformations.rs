@@ -23,6 +23,7 @@ pub fn scaling(x: f32, y: f32, z: f32) -> Matrix<4, 4> {
 #[cfg(test)]
 mod tests {
     use crate::{point::Point, vector::Vector};
+    use pretty_assertions::assert_eq;
 
     use super::*;
 
@@ -72,5 +73,14 @@ mod tests {
         let vector = Vector::new(-4.0, 6.0, 8.0);
 
         assert_eq!(Vector::new(-2.0, 2.0, 2.0), transform * vector);
+    }
+
+    #[test]
+    fn reflection_is_scaling_by_negative_value() {
+        let transform = scaling(-1.0, 1.0, 1.0);
+        let point = Point::new(2.0, 3.0, 4.0);
+
+        // moves a point on the other side of an axis
+        assert_eq!(Point::new(-2.0, 3.0, 4.0), transform * point)
     }
 }
