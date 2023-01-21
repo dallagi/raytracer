@@ -37,7 +37,7 @@ impl ops::Index<usize> for Intersections {
 
 #[cfg(test)]
 mod tests {
-    use crate::sphere::Object;
+    use crate::object::Object;
     use pretty_assertions::assert_eq;
 
     use super::*;

@@ -1,4 +1,4 @@
-use crate::{float_eq::FloatEq, sphere::Object};
+use crate::{float_eq::FloatEq, object::Object};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Intersection {

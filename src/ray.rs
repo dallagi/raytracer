@@ -1,8 +1,8 @@
 use crate::intersection::Intersection;
 use crate::intersections::Intersections;
 use crate::matrix::Matrix;
+use crate::object::Object;
 use crate::point::Point;
-use crate::sphere::Object;
 use crate::vector::Vector;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
