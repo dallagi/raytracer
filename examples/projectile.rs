@@ -1,6 +1,5 @@
-/// A simple example from chapter 1 on using points and vectors
-/// Calculates how far a projectile goes, considering gravity and wind
-///
+//// A simple example from chapter 1 on using points and vectors
+//// Calculates how far a projectile goes, considering gravity and wind
 use raytracer::{point::Point, vector::Vector};
 
 #[derive(Debug)]

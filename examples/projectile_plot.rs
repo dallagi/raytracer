@@ -1,14 +1,12 @@
-use std::fs::File;
-
-/// A simple example from chapter 2 on plotting on a canvas.
-/// Same as the example in `projectile.rs`, but in this case we plot the
-/// trajectory of the projectile on a canvas and save it to file.
-///
+//// A simple example from chapter 2 on plotting on a canvas.
+//// Same as the example in `projectile.rs`, but in this case we plot the
+//// trajectory of the projectile on a canvas and save it to file.
 use raytracer::canvas::Canvas;
 use raytracer::color::Color;
 use raytracer::point::Point;
 use raytracer::ppm_writer::PpmWriter;
 use raytracer::vector::Vector;
+use std::fs::File;
 
 #[derive(Debug)]
 struct Projectile {

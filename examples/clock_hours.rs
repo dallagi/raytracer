@@ -1,3 +1,6 @@
+//// Example from Chapter 4
+//// Generates an image with points corresponding to the 12 hours
+//// on an analog clock wall.
 use std::{f32::consts::PI, fs::File};
 
 use raytracer::{
