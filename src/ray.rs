@@ -1,10 +1,11 @@
 use crate::intersection::Intersection;
 use crate::intersections::Intersections;
+use crate::matrix::Matrix;
 use crate::point::Point;
 use crate::sphere::Object;
 use crate::vector::Vector;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Ray {
     pub origin: Point,
     pub direction: Vector,
@@ -47,10 +48,19 @@ impl Ray {
             Intersections::of(&[Intersection::new(t2, object), Intersection::new(t1, object)])
         }
     }
+
+    fn transform(self, transformation_matrix: Matrix<4, 4>) -> Self {
+        Self {
+            origin: transformation_matrix * self.origin,
+            direction: transformation_matrix * self.direction,
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::matrix::transformations;
+
     use super::*;
 
     use pretty_assertions::assert_eq;
@@ -132,5 +142,27 @@ mod tests {
 
         assert_eq!(sphere, intersections[0].object);
         assert_eq!(sphere, intersections[1].object);
+    }
+
+    #[test]
+    fn can_be_transformed_via_translation() {
+        let ray = Ray::new(Point::new(1.0, 2.0, 3.0), Vector::new(0.0, 1.0, 0.0));
+        let transformation = transformations::translation(3.0, 4.0, 5.0);
+
+        assert_eq!(
+            Ray::new(Point::new(4.0, 6.0, 8.0), Vector::new(0.0, 1.0, 0.0)),
+            ray.transform(transformation)
+        )
+    }
+
+    #[test]
+    fn can_be_transformed_via_scaling() {
+        let ray = Ray::new(Point::new(1.0, 2.0, 3.0), Vector::new(0.0, 1.0, 0.0));
+        let transformation = transformations::scaling(2.0, 3.0, 4.0);
+
+        assert_eq!(
+            Ray::new(Point::new(2.0, 6.0, 12.0), Vector::new(0.0, 3.0, 0.0)),
+            ray.transform(transformation)
+        )
     }
 }
