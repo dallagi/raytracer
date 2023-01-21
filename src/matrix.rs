@@ -6,9 +6,10 @@ mod matrix_2x2;
 mod matrix_3x3;
 mod matrix_4x4;
 mod matrix_nxn;
+pub mod transformations;
 
 #[derive(Copy, Clone, Debug)]
-struct Matrix<const ROWS: usize, const COLS: usize>([[f32; COLS]; ROWS]);
+pub struct Matrix<const ROWS: usize, const COLS: usize>([[f32; COLS]; ROWS]);
 
 impl<const ROWS: usize, const COLS: usize> Matrix<ROWS, COLS> {
     pub fn new(content: [[f32; COLS]; ROWS]) -> Self {
