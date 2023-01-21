@@ -20,8 +20,21 @@ pub fn scaling(x: f32, y: f32, z: f32) -> Matrix<4, 4> {
     result
 }
 
+pub fn rotation_x(radians: f32) -> Matrix<4, 4> {
+    let mut result: Matrix<4, 4> = Matrix::identity();
+
+    result[(1, 1)] = radians.cos();
+    result[(1, 2)] = -radians.sin();
+    result[(2, 1)] = radians.sin();
+    result[(2, 2)] = radians.cos();
+
+    result
+}
+
 #[cfg(test)]
 mod tests {
+    use std::f32::consts::PI;
+
     use crate::{point::Point, vector::Vector};
     use pretty_assertions::assert_eq;
 
@@ -82,5 +95,31 @@ mod tests {
 
         // moves a point on the other side of an axis
         assert_eq!(Point::new(-2.0, 3.0, 4.0), transform * point)
+    }
+
+    #[test]
+    fn rotation_x_rotates_a_point_around_x_axis() {
+        let point = Point::new(0.0, 1.0, 0.0);
+
+        let half_quarter = rotation_x(PI / 4.0);
+        let full_quarter = rotation_x(PI / 2.0);
+
+        assert_eq!(
+            Point::new(0.0, (2.0_f32).sqrt() / 2.0, (2.0_f32).sqrt() / 2.0),
+            half_quarter * point
+        );
+        assert_eq!(Point::new(0.0, 0.0, 1.0), full_quarter * point);
+    }
+
+    #[test]
+    fn inverse_of_rotation_x_rotates_a_point_in_the_opposite_direction() {
+        let point = Point::new(0.0, 1.0, 0.0);
+
+        let half_quarter = rotation_x(PI / 4.0).inverse();
+
+        assert_eq!(
+            Point::new(0.0, (2.0_f32).sqrt() / 2.0, -(2.0_f32).sqrt() / 2.0),
+            half_quarter * point
+        );
     }
 }
