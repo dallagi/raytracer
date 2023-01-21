@@ -31,6 +31,17 @@ pub fn rotation_x(radians: f32) -> Matrix<4, 4> {
     result
 }
 
+pub fn rotation_y(radians: f32) -> Matrix<4, 4> {
+    let mut result: Matrix<4, 4> = Matrix::identity();
+
+    result[(0, 0)] = radians.cos();
+    result[(0, 2)] = radians.sin();
+    result[(2, 0)] = -radians.sin();
+    result[(2, 2)] = radians.cos();
+
+    result
+}
+
 #[cfg(test)]
 mod tests {
     use std::f32::consts::PI;
@@ -121,5 +132,19 @@ mod tests {
             Point::new(0.0, (2.0_f32).sqrt() / 2.0, -(2.0_f32).sqrt() / 2.0),
             half_quarter * point
         );
+    }
+
+    #[test]
+    fn rotation_y_rotates_a_point_around_y_axis() {
+        let point = Point::new(0.0, 0.0, 1.0);
+
+        let half_quarter = rotation_y(PI / 4.0);
+        let full_quarter = rotation_y(PI / 2.0);
+
+        assert_eq!(
+            Point::new((2.0_f32).sqrt() / 2.0, 0.0, (2.0_f32).sqrt() / 2.0),
+            half_quarter * point
+        );
+        assert_eq!(Point::new(1.0, 0.0, 0.0), full_quarter * point);
     }
 }
