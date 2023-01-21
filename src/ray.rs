@@ -26,11 +26,13 @@ impl Ray {
     ///
     /// See https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
     pub fn intersect(self, object: Object) -> Intersections {
-        let sphere_center = Point::new(0.0, 0.0, 0.0);
-        let sphere_center_to_ray = self.origin - sphere_center;
+        let transformed_ray = self.transform(object.transformation.inverse());
 
-        let a = self.direction.dot(self.direction);
-        let b = 2.0 * self.direction.dot(sphere_center_to_ray);
+        let sphere_center = Point::new(0.0, 0.0, 0.0);
+        let sphere_center_to_ray = transformed_ray.origin - sphere_center;
+
+        let a = transformed_ray.direction.dot(transformed_ray.direction);
+        let b = 2.0 * transformed_ray.direction.dot(sphere_center_to_ray);
         let c = sphere_center_to_ray.dot(sphere_center_to_ray) - 1.0;
 
         let discriminant = b.powf(2.0) - 4.0 * a * c;
@@ -59,7 +61,7 @@ impl Ray {
 
 #[cfg(test)]
 mod tests {
-    use crate::matrix::transformations;
+    use crate::{matrix::transformations, object::Object};
 
     use super::*;
 
@@ -164,5 +166,28 @@ mod tests {
             Ray::new(Point::new(2.0, 6.0, 12.0), Vector::new(0.0, 3.0, 0.0)),
             ray.transform(transformation)
         )
+    }
+
+    #[test]
+    fn intersect_can_scale_ray_before_calculation() {
+        let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
+        let mut sphere = Object::sphere();
+        sphere.set_transformation(transformations::scaling(2.0, 2.0, 2.0));
+
+        let intersections = ray.intersect(sphere);
+
+        assert_eq!(2, intersections.count());
+        assert_eq!(3.0, intersections[0].t);
+        assert_eq!(7.0, intersections[1].t);
+    }
+    #[test]
+    fn intersect_can_translate_ray_before_calculation() {
+        let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
+        let mut sphere = Object::sphere();
+        sphere.set_transformation(transformations::translation(5.0, 0.0, 0.0));
+
+        let intersections = ray.intersect(sphere);
+
+        assert_eq!(0, intersections.count());
     }
 }
