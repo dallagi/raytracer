@@ -10,6 +10,8 @@ pub struct Vector {
 }
 
 impl Vector {
+    pub const W: f32 = 0.0;
+
     pub fn new(x: f32, y: f32, z: f32) -> Self {
         Self { x, y, z }
     }

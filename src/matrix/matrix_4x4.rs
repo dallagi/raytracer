@@ -1,4 +1,9 @@
-use crate::{float_eq::FloatEq, matrix::Matrix};
+use std::ops;
+
+use crate::float_eq::FloatEq;
+use crate::matrix::Matrix;
+use crate::point::Point;
+use crate::vector::Vector;
 
 const SIZE: usize = 4;
 
@@ -48,9 +53,66 @@ impl Matrix<SIZE, SIZE> {
     }
 }
 
+impl ops::Mul<Point> for Matrix<4, 4> {
+    type Output = Point;
+
+    fn mul(self, point: Point) -> Self::Output {
+        let point_as_4x1_matrix = Matrix::new([[point.x], [point.y], [point.z], [Point::W]]);
+        let result_as_matrix = self * point_as_4x1_matrix;
+
+        Point::new(
+            result_as_matrix[(0, 0)],
+            result_as_matrix[(1, 0)],
+            result_as_matrix[(2, 0)],
+        )
+    }
+}
+
+impl ops::Mul<Vector> for Matrix<4, 4> {
+    type Output = Vector;
+
+    fn mul(self, vector: Vector) -> Self::Output {
+        let vector_as_4x1_matrix = Matrix::new([[vector.x], [vector.y], [vector.z], [Vector::W]]);
+        let result_as_matrix = self * vector_as_4x1_matrix;
+
+        Vector::new(
+            result_as_matrix[(0, 0)],
+            result_as_matrix[(1, 0)],
+            result_as_matrix[(2, 0)],
+        )
+    }
+}
+
 #[cfg(test)]
 mod tests {
+
     use super::*;
+
+    #[test]
+    fn multiply_by_point() {
+        let matrix = Matrix::new([
+            [1.0, 2.0, 3.0, 4.0],
+            [2.0, 4.0, 4.0, 2.0],
+            [8.0, 6.0, 4.0, 1.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ]);
+        let point = Point::new(1.0, 2.0, 3.0);
+
+        assert_eq!(Point::new(18.0, 24.0, 33.0), matrix * point);
+    }
+
+    #[test]
+    fn multiply_by_vector() {
+        let matrix = Matrix::new([
+            [1.0, 2.0, 3.0, 4.0],
+            [2.0, 4.0, 4.0, 2.0],
+            [8.0, 6.0, 4.0, 1.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ]);
+        let vector = Vector::new(1.0, 2.0, 3.0);
+
+        assert_eq!(Vector::new(14.0, 22.0, 32.0), matrix * vector);
+    }
 
     #[test]
     fn determinant_of_4x4_matrix() {

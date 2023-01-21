@@ -9,6 +9,8 @@ pub struct Point {
 }
 
 impl Point {
+    pub const W: f32 = 1.0;
+
     pub fn new(x: f32, y: f32, z: f32) -> Self {
         Self { x, y, z }
     }
