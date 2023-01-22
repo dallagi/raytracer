@@ -4,16 +4,16 @@ use std::fs::File;
 
 use raytracer::canvas::Canvas;
 use raytracer::color::Color;
-use raytracer::object::Object;
 use raytracer::point::Point;
 use raytracer::ppm_writer::PpmWriter;
 use raytracer::ray::Ray;
+use raytracer::sphere::Sphere;
 
 const CANVAS_SIZE: usize = 500;
 
 fn main() {
     let mut canvas = Canvas::new(CANVAS_SIZE, CANVAS_SIZE);
-    let sphere = Object::sphere();
+    let sphere = Sphere::new();
 
     // keep in mind that the sphere is at point (0, 0, 0).
     // we'll cast a ray from z = -5 to a wall with z = 10

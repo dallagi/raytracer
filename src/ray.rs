@@ -1,8 +1,8 @@
 use crate::intersection::Intersection;
 use crate::intersections::Intersections;
 use crate::matrix::Matrix;
-use crate::object::Object;
 use crate::point::Point;
+use crate::sphere::Sphere;
 use crate::vector::Vector;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -25,7 +25,7 @@ impl Ray {
     /// For single intersections (ie. tangent lines), it will return the same t two times.
     ///
     /// See https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
-    pub fn intersect(self, object: Object) -> Intersections {
+    pub fn intersect(self, object: Sphere) -> Intersections {
         let transformed_ray = self.transform(object.transformation.inverse());
 
         let sphere_center = Point::new(0.0, 0.0, 0.0);
@@ -61,7 +61,7 @@ impl Ray {
 
 #[cfg(test)]
 mod tests {
-    use crate::{matrix::transformations, object::Object};
+    use crate::{matrix::transformations, sphere::Sphere};
 
     use super::*;
 
@@ -91,7 +91,7 @@ mod tests {
     #[test]
     fn a_ray_can_intersect_a_sphere_at_two_points() {
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Object::sphere();
+        let sphere = Sphere::new();
 
         // t values at which the ray intersects the sphere
         let intersections = ray.intersect(sphere);
@@ -104,7 +104,7 @@ mod tests {
     #[test]
     fn a_ray_can_miss_a_sphere() {
         let ray = Ray::new(Point::new(0.0, 2.0, 5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Object::sphere();
+        let sphere = Sphere::new();
 
         let intersect_ts = ray.intersect(sphere);
 
@@ -114,7 +114,7 @@ mod tests {
     #[test]
     fn a_ray_originating_inside_the_sphere_intersects_the_sphere_in_two_points() {
         let ray = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Object::sphere();
+        let sphere = Sphere::new();
 
         let intersections = ray.intersect(sphere);
 
@@ -126,7 +126,7 @@ mod tests {
     #[test]
     fn a_ray_can_intersect_a_sphere_behind_it_two_times() {
         let ray = Ray::new(Point::new(0.0, 0.0, 5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Object::sphere();
+        let sphere = Sphere::new();
 
         let intersections = ray.intersect(sphere);
 
@@ -138,7 +138,7 @@ mod tests {
     #[test]
     fn intersect_sets_the_object_of_the_intersection() {
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Object::sphere();
+        let sphere = Sphere::new();
 
         let intersections = ray.intersect(sphere);
 
@@ -171,7 +171,7 @@ mod tests {
     #[test]
     fn intersect_can_scale_ray_before_calculation() {
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let mut sphere = Object::sphere();
+        let mut sphere = Sphere::new();
         sphere.set_transformation(transformations::scaling(2.0, 2.0, 2.0));
 
         let intersections = ray.intersect(sphere);
@@ -183,7 +183,7 @@ mod tests {
     #[test]
     fn intersect_can_translate_ray_before_calculation() {
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let mut sphere = Object::sphere();
+        let mut sphere = Sphere::new();
         sphere.set_transformation(transformations::translation(5.0, 0.0, 0.0));
 
         let intersections = ray.intersect(sphere);

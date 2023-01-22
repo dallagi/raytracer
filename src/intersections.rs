@@ -37,14 +37,15 @@ impl ops::Index<usize> for Intersections {
 
 #[cfg(test)]
 mod tests {
-    use crate::object::Object;
     use pretty_assertions::assert_eq;
+
+    use crate::sphere::Sphere;
 
     use super::*;
 
     #[test]
     fn aggregates_intersections() {
-        let sphere = Object::sphere();
+        let sphere = Sphere::new();
         let intersection_1 = Intersection::new(1.0, sphere);
         let intersection_2 = Intersection::new(2.0, sphere);
 
@@ -56,7 +57,7 @@ mod tests {
 
     #[test]
     fn when_all_ts_are_positive_hit_is_intersection_with_lowest_t() {
-        let sphere = Object::sphere();
+        let sphere = Sphere::new();
         let intersection_1 = Intersection::new(1.0, sphere);
         let intersection_2 = Intersection::new(2.0, sphere);
 
@@ -67,7 +68,7 @@ mod tests {
 
     #[test]
     fn when_some_ts_are_negative_hit_is_intersection_with_lowest_nonnegative_t() {
-        let sphere = Object::sphere();
+        let sphere = Sphere::new();
         let intersection_1 = Intersection::new(-1.0, sphere);
         let intersection_2 = Intersection::new(1.0, sphere);
 
@@ -78,7 +79,7 @@ mod tests {
 
     #[test]
     fn when_all_ts_are_negative_intersection_is_nothing() {
-        let sphere = Object::sphere();
+        let sphere = Sphere::new();
         let intersection_1 = Intersection::new(-2.0, sphere);
         let intersection_2 = Intersection::new(-1.0, sphere);
 
@@ -89,7 +90,7 @@ mod tests {
 
     #[test]
     fn hit_is_always_intersection_with_lowest_nonnegative_t() {
-        let sphere = Object::sphere();
+        let sphere = Sphere::new();
         let intersection_1 = Intersection::new(5.0, sphere);
         let intersection_2 = Intersection::new(7.0, sphere);
         let intersection_3 = Intersection::new(-3.0, sphere);
