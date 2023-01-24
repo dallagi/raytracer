@@ -4,7 +4,7 @@ use crate::material::Material;
 use crate::point::Point;
 use crate::vector::Vector;
 
-fn lighting(
+pub fn lighting(
     material: Material,
     light: Light,
     position: Point,
