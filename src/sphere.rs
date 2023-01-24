@@ -17,11 +17,12 @@ impl Sphere {
     }
 
     pub fn normal_at(self, world_point: Point) -> Vector {
-        let object_point = self.transformation.inverse() * world_point;
+        let inverse_transformation = self.transformation.inverse();
 
+        let object_point = inverse_transformation * world_point;
         let object_normal = (object_point - self.origin()).normalize();
+        let world_normal = inverse_transformation.transpose() * object_normal;
 
-        let world_normal = self.transformation.inverse().transpose() * object_normal;
         world_normal.normalize()
     }
 
