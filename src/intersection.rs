@@ -27,7 +27,7 @@ mod tests {
 
     #[test]
     fn intersectin_encapsulates_t_and_object() {
-        let sphere = Sphere::new();
+        let sphere = Sphere::default();
         let intersection = Intersection::new(3.5, sphere);
 
         assert_eq!(3.5, intersection.t);

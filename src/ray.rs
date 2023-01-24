@@ -91,7 +91,7 @@ mod tests {
     #[test]
     fn a_ray_can_intersect_a_sphere_at_two_points() {
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Sphere::new();
+        let sphere = Sphere::default();
 
         // t values at which the ray intersects the sphere
         let intersections = ray.intersect(sphere);
@@ -104,7 +104,7 @@ mod tests {
     #[test]
     fn a_ray_can_miss_a_sphere() {
         let ray = Ray::new(Point::new(0.0, 2.0, 5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Sphere::new();
+        let sphere = Sphere::default();
 
         let intersect_ts = ray.intersect(sphere);
 
@@ -114,7 +114,7 @@ mod tests {
     #[test]
     fn a_ray_originating_inside_the_sphere_intersects_the_sphere_in_two_points() {
         let ray = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Sphere::new();
+        let sphere = Sphere::default();
 
         let intersections = ray.intersect(sphere);
 
@@ -126,7 +126,7 @@ mod tests {
     #[test]
     fn a_ray_can_intersect_a_sphere_behind_it_two_times() {
         let ray = Ray::new(Point::new(0.0, 0.0, 5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Sphere::new();
+        let sphere = Sphere::default();
 
         let intersections = ray.intersect(sphere);
 
@@ -138,7 +138,7 @@ mod tests {
     #[test]
     fn intersect_sets_the_object_of_the_intersection() {
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Sphere::new();
+        let sphere = Sphere::default();
 
         let intersections = ray.intersect(sphere);
 
@@ -171,8 +171,8 @@ mod tests {
     #[test]
     fn intersect_can_scale_ray_before_calculation() {
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let mut sphere = Sphere::new();
-        sphere.set_transformation(transformations::scaling(2.0, 2.0, 2.0));
+        let mut sphere = Sphere::default();
+        sphere.transformation = transformations::scaling(2.0, 2.0, 2.0);
 
         let intersections = ray.intersect(sphere);
 
@@ -183,8 +183,8 @@ mod tests {
     #[test]
     fn intersect_can_translate_ray_before_calculation() {
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let mut sphere = Sphere::new();
-        sphere.set_transformation(transformations::translation(5.0, 0.0, 0.0));
+        let mut sphere = Sphere::default();
+        sphere.transformation = transformations::translation(5.0, 0.0, 0.0);
 
         let intersections = ray.intersect(sphere);
 

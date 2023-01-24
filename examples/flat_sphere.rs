@@ -13,7 +13,7 @@ const CANVAS_SIZE: usize = 500;
 
 fn main() {
     let mut canvas = Canvas::new(CANVAS_SIZE, CANVAS_SIZE);
-    let sphere = Sphere::new();
+    let sphere = Sphere::default();
 
     // keep in mind that the sphere is at point (0, 0, 0).
     // we'll cast a ray from z = -5 to a wall with z = 10
