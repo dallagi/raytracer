@@ -44,7 +44,7 @@ fn main() {
     for y in 0..CANVAS_SIZE {
         // here we substract the value from half to flip the y value, since y on the canvas
         // goes from top to down, while in the world it goes from the bottom up
-        let world_y = half - pixel_size * y as f32;
+        let world_y = -half + pixel_size * y as f32;
 
         for x in 0..CANVAS_SIZE {
             // x doesn't need to get flipped, so we just shift by substracting half to center
