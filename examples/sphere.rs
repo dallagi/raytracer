@@ -5,7 +5,7 @@ use std::fs::File;
 use raytracer::canvas::Canvas;
 use raytracer::color::Color;
 use raytracer::light::Light;
-use raytracer::lighting::{self, lighting};
+use raytracer::lighting::lighting;
 use raytracer::material::Material;
 use raytracer::point::Point;
 use raytracer::ppm_writer::PpmWriter;
@@ -36,19 +36,18 @@ fn main() {
     let wall_size = 7.0; // sphere should take 6
 
     let pixel_size = wall_size / CANVAS_SIZE as f32;
+
     // we'll need `half` since the the wall will be centered around the origin
-    // (hence it will includ points with negative coordinates)
-    // but the canvas coordinates are all nonnegative, so we need to shift them accordingly
+    // (hence it will include points with negative coordinates) but the canvas
+    // coordinates are all nonnegative, so we need to shift them accordingly
     let half = wall_size / 2.0;
 
     for y in 0..CANVAS_SIZE {
-        // here we substract the value from half to flip the y value, since y on the canvas
-        // goes from top to down, while in the world it goes from the bottom up
+        // shift y to center it around the origin
         let world_y = -half + pixel_size * y as f32;
 
         for x in 0..CANVAS_SIZE {
-            // x doesn't need to get flipped, so we just shift by substracting half to center
-            // it around the origin
+            // shift x to center it around the origin
             let world_x = -half + pixel_size * x as f32;
 
             let position = Point::new(world_y, world_x, wall_z);
