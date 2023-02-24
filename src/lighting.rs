@@ -4,6 +4,8 @@ use crate::material::Material;
 use crate::point::Point;
 use crate::vector::Vector;
 
+/// Implementation of the Phong reflection model
+/// See also https://en.wikipedia.org/wiki/Phong_reflection_model
 pub fn lighting(
     material: Material,
     light: Light,
@@ -17,12 +19,12 @@ pub fn lighting(
     // direction to the light source
     let light_vector = (light.position - position).normalize();
 
-    //ambient contribution
+    // ambient contribution
     let ambient = effective_color * material.ambient;
 
     // light_dot_normal represents the cosine of the angle between the
-    // light vector and the normal vector. A negative number means the
-    // light is on the other side of the surface.
+    // light vector and the normal vector.
+    // A negative number means the light is on the other side of the surface.
     let light_dot_normal = light_vector.dot(normal_vector);
 
     let (diffuse, specular) = if light_dot_normal < 0.0 {
