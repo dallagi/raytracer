@@ -19,6 +19,7 @@ fn main() {
     let mut sphere = Sphere::default();
     sphere.material = Material {
         color: Color::new(1.0, 0.2, 1.0),
+        shininess: 200.0,
         ..Default::default()
     };
 
@@ -44,13 +45,13 @@ fn main() {
 
     for y in 0..CANVAS_SIZE {
         // shift y to center it around the origin
-        let world_y = -half + pixel_size * y as f64;
+        let world_y = half - pixel_size * y as f64;
 
         for x in 0..CANVAS_SIZE {
             // shift x to center it around the origin
             let world_x = -half + pixel_size * x as f64;
 
-            let position = Point::new(world_y, world_x, wall_z);
+            let position = Point::new(world_x, world_y, wall_z);
             let ray = Ray::new(ray_origin, (position - ray_origin).normalize());
             let intersections = ray.intersect(sphere);
 
