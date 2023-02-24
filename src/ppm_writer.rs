@@ -26,14 +26,14 @@ impl<W: io::Write> PpmWriter<W> {
     }
 
     fn write_header(&mut self, canvas: &Canvas) -> Result<(), io::Error> {
-        self.writer.write(PPM_FLAVOR_IDENTIFIER)?;
-        self.writer.write(b"\n")?;
+        self.writer.write_all(PPM_FLAVOR_IDENTIFIER)?;
+        self.writer.write_all(b"\n")?;
         self.write_i32_as_str(canvas.width() as i32)?;
-        self.writer.write(b" ")?;
+        self.writer.write_all(b" ")?;
         self.write_i32_as_str(canvas.height() as i32)?;
-        self.writer.write(b"\n")?;
+        self.writer.write_all(b"\n")?;
         self.write_i32_as_str(MAX_PIXEL_VALUE as i32)?;
-        self.writer.write(b"\n")?;
+        self.writer.write_all(b"\n")?;
         Ok(())
     }
 
@@ -51,24 +51,27 @@ impl<W: io::Write> PpmWriter<W> {
                     if row_length + whitespace_size + component_formatted.len()
                         > MAX_PPM_BODY_ROW_LENGTH
                     {
-                        self.writer.write(b"\n")?;
+                        self.writer.write_all(b"\n")?;
                         row_length = 0;
                     }
                     if row_length != 0 {
-                        row_length += self.writer.write(b" ")?;
+                        self.writer.write_all(b" ")?;
+                        row_length += 1;
                     }
 
-                    row_length += self.writer.write(component_formatted.as_bytes())?;
+                    let component_formatted_bytes = component_formatted.as_bytes();
+                    self.writer.write_all(component_formatted_bytes)?;
+                    row_length += component_formatted.len();
                 }
             }
 
-            self.writer.write(b"\n")?;
+            self.writer.write_all(b"\n")?;
         }
         Ok(())
     }
 
-    fn write_i32_as_str(&mut self, num: i32) -> Result<usize, io::Error> {
-        self.writer.write(num.to_string().as_bytes())
+    fn write_i32_as_str(&mut self, num: i32) -> Result<(), io::Error> {
+        self.writer.write_all(num.to_string().as_bytes())
     }
 }
 
