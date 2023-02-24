@@ -152,7 +152,7 @@ mod tests {
             ppm_writer.write_canvas(&canvas).unwrap();
         }
 
-        assert_eq!(ppm_buffer.last(), Some(&('\n' as u8)))
+        assert_eq!(ppm_buffer.last(), Some(&b'\n'))
     }
 
     fn str_lines(buffer: &[u8]) -> Vec<&str> {

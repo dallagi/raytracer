@@ -18,7 +18,7 @@ impl Vector {
 
     /// Length of the vector
     pub fn magnitude(self) -> f64 {
-        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt() as f64
+        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
 
     /// Convert into unit vector
@@ -139,12 +139,12 @@ mod tests {
         assert!(1.0.float_eq(Vector::new(1.0, 0.0, 0.0).magnitude()));
         assert!(1.0.float_eq(Vector::new(0.0, 1.0, 0.0).magnitude()));
         assert!(1.0.float_eq(Vector::new(0.0, 0.0, 1.0).magnitude()));
-        assert!((14.0 as f64)
+        assert!(14.0_f64
             .sqrt()
-            .float_eq(Vector::new(1.0, 2.0, 3.0).magnitude() as f64));
-        assert!((14.0 as f64)
+            .float_eq(Vector::new(1.0, 2.0, 3.0).magnitude()));
+        assert!(14.0_f64
             .sqrt()
-            .float_eq(Vector::new(-1.0, -2.0, -3.0).magnitude() as f64));
+            .float_eq(Vector::new(-1.0, -2.0, -3.0).magnitude()));
     }
 
     #[test]

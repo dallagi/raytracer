@@ -19,7 +19,7 @@ fn main() {
     let radiant_5mins = (PI * 2.0) / HOURS_COUNT as f64;
     for hour in 0..HOURS_COUNT {
         let hour_point = rotation_z(hour as f64 * radiant_5mins) * twelve_o_clock;
-        println!("{hour}: {:?}", hour_point);
+        println!("{hour}: {hour_point:?}");
         const HALF_CANVAS: i32 = CANVAS_SIZE as i32 / 2;
 
         canvas.write_pixel(

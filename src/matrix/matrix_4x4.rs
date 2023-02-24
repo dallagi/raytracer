@@ -36,7 +36,7 @@ impl Matrix<SIZE, SIZE> {
         let mut res = self.cofactor_matrix().transpose();
         for r in 0..SIZE {
             for c in 0..SIZE {
-                res[(r, c)] = res[(r, c)] / determinant;
+                res[(r, c)] /= determinant;
             }
         }
         res
@@ -86,6 +86,7 @@ impl ops::Mul<Vector> for Matrix<4, 4> {
 impl ops::Shr<Matrix<4, 4>> for Matrix<4, 4> {
     type Output = Matrix<4, 4>;
 
+    #[allow(clippy::suspicious_arithmetic_impl)]
     fn shr(self, other: Matrix<4, 4>) -> Self::Output {
         other * self
     }
