@@ -40,7 +40,7 @@ fn main() {
             // it around the origin
             let world_x = -half + pixel_size * x as f64;
 
-            let position = Point::new(world_y, world_x, wall_z);
+            let position = Point::new(world_x, world_y, wall_z);
             let ray = Ray::new(ray_origin, (position - ray_origin).normalize());
             let intersections = ray.intersect(sphere);
 
