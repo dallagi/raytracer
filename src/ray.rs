@@ -4,6 +4,7 @@ use crate::matrix::Matrix;
 use crate::point::Point;
 use crate::sphere::Sphere;
 use crate::vector::Vector;
+use crate::world::World;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Ray {
@@ -51,6 +52,16 @@ impl Ray {
         }
     }
 
+    pub fn intersect_world(&self, world: World) -> Intersections {
+        let all_intersections = world
+            .objects
+            .into_iter()
+            .map(|object| self.intersect(object))
+            .collect();
+
+        Intersections::merge(all_intersections)
+    }
+
     fn transform(self, transformation_matrix: Matrix<4, 4>) -> Self {
         Self {
             origin: transformation_matrix * self.origin,
@@ -61,7 +72,7 @@ impl Ray {
 
 #[cfg(test)]
 mod tests {
-    use crate::{matrix::transformations, sphere::Sphere};
+    use crate::{matrix::transformations, sphere::Sphere, world::World};
 
     use super::*;
 
@@ -180,6 +191,7 @@ mod tests {
         assert_eq!(3.0, intersections[0].t);
         assert_eq!(7.0, intersections[1].t);
     }
+
     #[test]
     fn intersect_can_translate_ray_before_calculation() {
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
@@ -189,5 +201,19 @@ mod tests {
         let intersections = ray.intersect(sphere);
 
         assert_eq!(0, intersections.count());
+    }
+
+    #[test]
+    fn intersect_world_returns_all_intersections_with_objects_in_the_world() {
+        let world = World::default();
+        let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
+
+        let intersections = ray.intersect_world(world);
+
+        assert_eq!(4, intersections.count());
+        assert_eq!(4.0, intersections[0].t);
+        assert_eq!(4.5, intersections[1].t);
+        assert_eq!(5.5, intersections[2].t);
+        assert_eq!(6.0, intersections[3].t);
     }
 }
