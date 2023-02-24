@@ -24,7 +24,7 @@ fn main() {
 
     let wall_size = 7.0; // sphere should take 6
 
-    let pixel_size = wall_size / CANVAS_SIZE as f32;
+    let pixel_size = wall_size / CANVAS_SIZE as f64;
     // we'll need `half` since the the wall will be centered around the origin
     // (hence it will includ points with negative coordinates)
     // but the canvas coordinates are all nonnegative, so we need to shift them accordingly
@@ -33,12 +33,12 @@ fn main() {
     for y in 0..CANVAS_SIZE {
         // here we substract the value from half to flip the y value, since y on the canvas
         // goes from top to down, while in the world it goes from the bottom up
-        let world_y = half - pixel_size * y as f32;
+        let world_y = half - pixel_size * y as f64;
 
         for x in 0..CANVAS_SIZE {
             // x doesn't need to get flipped, so we just shift by substracting half to center
             // it around the origin
-            let world_x = -half + pixel_size * x as f32;
+            let world_x = -half + pixel_size * x as f64;
 
             let position = Point::new(world_y, world_x, wall_z);
             let ray = Ray::new(ray_origin, (position - ray_origin).normalize());

@@ -3,12 +3,12 @@ use crate::sphere::Sphere;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Intersection {
-    pub t: f32,
+    pub t: f64,
     pub object: Sphere,
 }
 
 impl Intersection {
-    pub fn new(t: f32, object: Sphere) -> Self {
+    pub fn new(t: f64, object: Sphere) -> Self {
         Self { t, object }
     }
 }

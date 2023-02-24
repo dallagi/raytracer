@@ -35,7 +35,7 @@ fn main() {
 
     let wall_size = 7.0; // sphere should take 6
 
-    let pixel_size = wall_size / CANVAS_SIZE as f32;
+    let pixel_size = wall_size / CANVAS_SIZE as f64;
 
     // we'll need `half` since the the wall will be centered around the origin
     // (hence it will include points with negative coordinates) but the canvas
@@ -44,11 +44,11 @@ fn main() {
 
     for y in 0..CANVAS_SIZE {
         // shift y to center it around the origin
-        let world_y = -half + pixel_size * y as f32;
+        let world_y = -half + pixel_size * y as f64;
 
         for x in 0..CANVAS_SIZE {
             // shift x to center it around the origin
-            let world_x = -half + pixel_size * x as f32;
+            let world_x = -half + pixel_size * x as f64;
 
             let position = Point::new(world_y, world_x, wall_z);
             let ray = Ray::new(ray_origin, (position - ray_origin).normalize());

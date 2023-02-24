@@ -72,7 +72,7 @@ mod tests {
         // specular component at roughly zero, ambient and diffuse at full strength
         let material = Material::default();
         let position = Point::new(0.0, 0.0, 0.0);
-        let eye_v = Vector::new(0.0, (2.0_f32).sqrt() / 2.0, -(2.0_f32).sqrt() / 2.0);
+        let eye_v = Vector::new(0.0, (2.0_f64).sqrt() / 2.0, -(2.0_f64).sqrt() / 2.0);
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
@@ -100,7 +100,7 @@ mod tests {
         // specular component at full strength, ambient and diffuse same as previous test
         let material = Material::default();
         let position = Point::new(0.0, 0.0, 0.0);
-        let eyev = Vector::new(0.0, -(2.0_f32).sqrt() / 2.0, -(2.0_f32).sqrt() / 2.0);
+        let eyev = Vector::new(0.0, -(2.0_f64).sqrt() / 2.0, -(2.0_f64).sqrt() / 2.0);
         let normalv = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 10.0, -10.0), Color::new(1.0, 1.0, 1.0));
 

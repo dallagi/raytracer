@@ -8,11 +8,11 @@ use crate::vector::Vector;
 const SIZE: usize = 4;
 
 impl Matrix<SIZE, SIZE> {
-    pub fn minor(self, row: usize, column: usize) -> f32 {
+    pub fn minor(self, row: usize, column: usize) -> f64 {
         self.submatrix(row, column).determinant()
     }
 
-    pub fn cofactor(self, row: usize, column: usize) -> f32 {
+    pub fn cofactor(self, row: usize, column: usize) -> f64 {
         let res = self.minor(row, column);
 
         if (row + column) % 2 == 0 {
@@ -22,7 +22,7 @@ impl Matrix<SIZE, SIZE> {
         }
     }
 
-    pub fn determinant(self) -> f32 {
+    pub fn determinant(self) -> f64 {
         (0..SIZE)
             .map(|row| self[(row, 0)] * self.cofactor(row, 0))
             .sum()

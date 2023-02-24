@@ -1,6 +1,6 @@
 use crate::matrix::Matrix;
 
-pub fn translation(x: f32, y: f32, z: f32) -> Matrix<4, 4> {
+pub fn translation(x: f64, y: f64, z: f64) -> Matrix<4, 4> {
     let mut result: Matrix<4, 4> = Matrix::identity();
 
     result[(0, 3)] = x;
@@ -10,7 +10,7 @@ pub fn translation(x: f32, y: f32, z: f32) -> Matrix<4, 4> {
     result
 }
 
-pub fn scaling(x: f32, y: f32, z: f32) -> Matrix<4, 4> {
+pub fn scaling(x: f64, y: f64, z: f64) -> Matrix<4, 4> {
     let mut result: Matrix<4, 4> = Matrix::identity();
 
     result[(0, 0)] = x;
@@ -20,7 +20,7 @@ pub fn scaling(x: f32, y: f32, z: f32) -> Matrix<4, 4> {
     result
 }
 
-pub fn rotation_x(radians: f32) -> Matrix<4, 4> {
+pub fn rotation_x(radians: f64) -> Matrix<4, 4> {
     let mut result: Matrix<4, 4> = Matrix::identity();
 
     result[(1, 1)] = radians.cos();
@@ -31,7 +31,7 @@ pub fn rotation_x(radians: f32) -> Matrix<4, 4> {
     result
 }
 
-pub fn rotation_y(radians: f32) -> Matrix<4, 4> {
+pub fn rotation_y(radians: f64) -> Matrix<4, 4> {
     let mut result: Matrix<4, 4> = Matrix::identity();
 
     result[(0, 0)] = radians.cos();
@@ -41,7 +41,7 @@ pub fn rotation_y(radians: f32) -> Matrix<4, 4> {
 
     result
 }
-pub fn rotation_z(radians: f32) -> Matrix<4, 4> {
+pub fn rotation_z(radians: f64) -> Matrix<4, 4> {
     let mut result: Matrix<4, 4> = Matrix::identity();
 
     result[(0, 0)] = radians.cos();
@@ -53,12 +53,12 @@ pub fn rotation_z(radians: f32) -> Matrix<4, 4> {
 }
 
 pub fn shearing(
-    x_to_y: f32,
-    x_to_z: f32,
-    y_to_x: f32,
-    y_to_z: f32,
-    z_to_x: f32,
-    z_to_y: f32,
+    x_to_y: f64,
+    x_to_z: f64,
+    y_to_x: f64,
+    y_to_z: f64,
+    z_to_x: f64,
+    z_to_y: f64,
 ) -> Matrix<4, 4> {
     let mut result: Matrix<4, 4> = Matrix::identity();
 
@@ -74,7 +74,7 @@ pub fn shearing(
 
 #[cfg(test)]
 mod tests {
-    use std::f32::consts::PI;
+    use std::f64::consts::PI;
 
     use crate::{point::Point, vector::Vector};
     use pretty_assertions::assert_eq;
@@ -147,7 +147,7 @@ mod tests {
         let full_quarter = rotation_x(PI / 2.0);
 
         assert_eq!(
-            Point::new(0.0, (2.0_f32).sqrt() / 2.0, (2.0_f32).sqrt() / 2.0),
+            Point::new(0.0, (2.0_f64).sqrt() / 2.0, (2.0_f64).sqrt() / 2.0),
             half_quarter * point
         );
         assert_eq!(Point::new(0.0, 0.0, 1.0), full_quarter * point);
@@ -160,7 +160,7 @@ mod tests {
         let half_quarter = rotation_x(PI / 4.0).inverse();
 
         assert_eq!(
-            Point::new(0.0, (2.0_f32).sqrt() / 2.0, -(2.0_f32).sqrt() / 2.0),
+            Point::new(0.0, (2.0_f64).sqrt() / 2.0, -(2.0_f64).sqrt() / 2.0),
             half_quarter * point
         );
     }
@@ -173,7 +173,7 @@ mod tests {
         let full_quarter = rotation_y(PI / 2.0);
 
         assert_eq!(
-            Point::new((2.0_f32).sqrt() / 2.0, 0.0, (2.0_f32).sqrt() / 2.0),
+            Point::new((2.0_f64).sqrt() / 2.0, 0.0, (2.0_f64).sqrt() / 2.0),
             half_quarter * point
         );
         assert_eq!(Point::new(1.0, 0.0, 0.0), full_quarter * point);
@@ -187,7 +187,7 @@ mod tests {
         let full_quarter = rotation_z(PI / 2.0);
 
         assert_eq!(
-            Point::new(-(2.0_f32).sqrt() / 2.0, (2.0_f32).sqrt() / 2.0, 0.0),
+            Point::new(-(2.0_f64).sqrt() / 2.0, (2.0_f64).sqrt() / 2.0, 0.0),
             half_quarter * point
         );
         assert_eq!(Point::new(-1.0, 0.0, 0.0), full_quarter * point);

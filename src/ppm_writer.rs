@@ -3,8 +3,8 @@ use std::io;
 use std::io::Write;
 
 const PPM_FLAVOR_IDENTIFIER: &[u8] = b"P3";
-const MIN_PIXEL_VALUE: f32 = 0.0;
-const MAX_PIXEL_VALUE: f32 = 255.0;
+const MIN_PIXEL_VALUE: f64 = 0.0;
+const MAX_PIXEL_VALUE: f64 = 255.0;
 const MAX_PPM_BODY_ROW_LENGTH: usize = 70;
 
 pub struct PpmWriter<W: io::Write> {

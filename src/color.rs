@@ -3,13 +3,13 @@ use std::ops;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Color {
-    pub red: f32,
-    pub green: f32,
-    pub blue: f32,
+    pub red: f64,
+    pub green: f64,
+    pub blue: f64,
 }
 
 impl Color {
-    pub fn new(red: f32, green: f32, blue: f32) -> Self {
+    pub fn new(red: f64, green: f64, blue: f64) -> Self {
         Self { red, green, blue }
     }
 
@@ -18,7 +18,7 @@ impl Color {
     }
 
     /// Scale color values between `min` and `max`
-    pub fn scale(&self, min: f32, max: f32) -> Self {
+    pub fn scale(&self, min: f64, max: f64) -> Self {
         Self {
             red: Self::scale_component(self.red, min, max),
             green: Self::scale_component(self.green, min, max),
@@ -26,7 +26,7 @@ impl Color {
         }
     }
 
-    fn scale_component(component: f32, min: f32, max: f32) -> f32 {
+    fn scale_component(component: f64, min: f64, max: f64) -> f64 {
         min + (component.clamp(0.0, 1.0) * (max - min))
     }
 }
@@ -63,10 +63,10 @@ impl ops::Sub for Color {
     }
 }
 
-impl ops::Mul<f32> for Color {
+impl ops::Mul<f64> for Color {
     type Output = Color;
 
-    fn mul(self, factor: f32) -> Self::Output {
+    fn mul(self, factor: f64) -> Self::Output {
         Color::new(self.red * factor, self.green * factor, self.blue * factor)
     }
 }

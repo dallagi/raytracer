@@ -1,7 +1,7 @@
 //// Example from Chapter 4
 //// Generates an image with points corresponding to the 12 hours
 //// on an analog clock wall.
-use std::{f32::consts::PI, fs::File};
+use std::{f64::consts::PI, fs::File};
 
 use raytracer::{
     canvas::Canvas, color::Color, matrix::transformations::rotation_z, point::Point,
@@ -16,9 +16,9 @@ fn main() {
 
     let twelve_o_clock = Point::new(0.0, 40.0, 0.0);
 
-    let radiant_5mins = (PI * 2.0) / HOURS_COUNT as f32;
+    let radiant_5mins = (PI * 2.0) / HOURS_COUNT as f64;
     for hour in 0..HOURS_COUNT {
-        let hour_point = rotation_z(hour as f32 * radiant_5mins) * twelve_o_clock;
+        let hour_point = rotation_z(hour as f64 * radiant_5mins) * twelve_o_clock;
         println!("{hour}: {:?}", hour_point);
         const HALF_CANVAS: i32 = CANVAS_SIZE as i32 / 2;
 

@@ -9,10 +9,10 @@ mod matrix_nxn;
 pub mod transformations;
 
 #[derive(Copy, Clone, Debug)]
-pub struct Matrix<const ROWS: usize, const COLS: usize>([[f32; COLS]; ROWS]);
+pub struct Matrix<const ROWS: usize, const COLS: usize>([[f64; COLS]; ROWS]);
 
 impl<const ROWS: usize, const COLS: usize> Matrix<ROWS, COLS> {
-    pub fn new(content: [[f32; COLS]; ROWS]) -> Self {
+    pub fn new(content: [[f64; COLS]; ROWS]) -> Self {
         Self(content)
     }
 
@@ -62,7 +62,7 @@ impl<const ROWS: usize, const COLS: usize> PartialEq for Matrix<ROWS, COLS> {
 }
 
 impl<const ROWS: usize, const COLS: usize> ops::Index<(usize, usize)> for Matrix<ROWS, COLS> {
-    type Output = f32;
+    type Output = f64;
 
     fn index(&self, index: (usize, usize)) -> &Self::Output {
         &self.0[index.0][index.1]
@@ -96,7 +96,7 @@ fn multiplication_element<const A_ROWS: usize, const A_COLS: usize, const B_COLS
     m1: Matrix<A_ROWS, A_COLS>,
     m2: Matrix<A_COLS, B_COLS>,
     index: (usize, usize),
-) -> f32 {
+) -> f64 {
     let (target_row, target_col) = index;
 
     let mut result = 0.0;

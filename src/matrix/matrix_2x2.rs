@@ -3,7 +3,7 @@ use crate::matrix::Matrix;
 const SIZE: usize = 2;
 
 impl Matrix<SIZE, SIZE> {
-    pub fn determinant(self) -> f32 {
+    pub fn determinant(self) -> f64 {
         self[(0, 0)] * self[(1, 1)] - self[(0, 1)] * self[(1, 0)]
     }
 }

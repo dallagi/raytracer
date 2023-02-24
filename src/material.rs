@@ -4,14 +4,14 @@ use crate::float_eq::FloatEq;
 #[derive(Copy, Clone, Debug)]
 pub struct Material {
     pub color: Color,
-    pub ambient: f32,   // usually 0..1
-    pub diffuse: f32,   // usually 0..1
-    pub specular: f32,  // usually 0..1
-    pub shininess: f32, // usually 10..200
+    pub ambient: f64,   // usually 0..1
+    pub diffuse: f64,   // usually 0..1
+    pub specular: f64,  // usually 0..1
+    pub shininess: f64, // usually 10..200
 }
 
 impl Material {
-    fn new(color: Color, ambient: f32, diffuse: f32, specular: f32, shininess: f32) -> Self {
+    fn new(color: Color, ambient: f64, diffuse: f64, specular: f64, shininess: f64) -> Self {
         assert!(ambient >= 0.0, "Ambient must be nonnegative");
         assert!(diffuse >= 0.0, "Diffuse must be nonnegative");
         assert!(specular >= 0.0, "Specular must be nonnegative");

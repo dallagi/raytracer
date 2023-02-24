@@ -4,21 +4,21 @@ use crate::float_eq::FloatEq;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vector {
-    pub x: f32,
-    pub y: f32,
-    pub z: f32,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
 }
 
 impl Vector {
-    pub const W: f32 = 0.0;
+    pub const W: f64 = 0.0;
 
-    pub fn new(x: f32, y: f32, z: f32) -> Self {
+    pub fn new(x: f64, y: f64, z: f64) -> Self {
         Self { x, y, z }
     }
 
     /// Length of the vector
-    pub fn magnitude(self) -> f32 {
-        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt() as f32
+    pub fn magnitude(self) -> f64 {
+        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt() as f64
     }
 
     /// Convert into unit vector
@@ -34,7 +34,7 @@ impl Vector {
     /// If two unit vectors have same dot product, they are the same
     /// If dot product is -1, vectors point in opposite directions
     /// Dot product of two unit vectors is the cosine of the angle between them
-    pub fn dot(self, other: Self) -> f32 {
+    pub fn dot(self, other: Self) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
@@ -83,18 +83,18 @@ impl ops::Neg for Vector {
     }
 }
 
-impl ops::Mul<f32> for Vector {
+impl ops::Mul<f64> for Vector {
     type Output = Vector;
 
-    fn mul(self, factor: f32) -> Self::Output {
+    fn mul(self, factor: f64) -> Self::Output {
         Vector::new(self.x * factor, self.y * factor, self.z * factor)
     }
 }
 
-impl ops::Div<f32> for Vector {
+impl ops::Div<f64> for Vector {
     type Output = Vector;
 
-    fn div(self, factor: f32) -> Self::Output {
+    fn div(self, factor: f64) -> Self::Output {
         Vector::new(self.x / factor, self.y / factor, self.z / factor)
     }
 }
@@ -191,7 +191,7 @@ mod tests {
     #[test]
     fn reflecting_vector_off_slanted_surface() {
         let vector = Vector::new(0.0, -1.0, 0.0);
-        let normal = Vector::new((2.0_f32).sqrt() / 2.0, (2.0_f32).sqrt() / 2.0, 0.0);
+        let normal = Vector::new((2.0_f64).sqrt() / 2.0, (2.0_f64).sqrt() / 2.0, 0.0);
 
         let reflected = vector.reflect(normal);
 

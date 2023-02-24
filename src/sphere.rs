@@ -40,7 +40,7 @@ impl Default for Sphere {
 
 #[cfg(test)]
 mod tests {
-    use std::f32::consts::PI;
+    use std::f64::consts::PI;
 
     use crate::matrix::transformations;
 
@@ -88,11 +88,11 @@ mod tests {
     #[test]
     fn normal_on_sphere_at_nonaxial_point() {
         let sphere = Sphere::default();
-        let point = Point::new(3f32.sqrt() / 3.0, 3f32.sqrt() / 3.0, 3f32.sqrt() / 3.0);
+        let point = Point::new(3f64.sqrt() / 3.0, 3f64.sqrt() / 3.0, 3f64.sqrt() / 3.0);
         let normal = sphere.normal_at(point);
         assert_eq!(
             normal,
-            Vector::new(3f32.sqrt() / 3.0, 3f32.sqrt() / 3.0, 3f32.sqrt() / 3.0)
+            Vector::new(3f64.sqrt() / 3.0, 3f64.sqrt() / 3.0, 3f64.sqrt() / 3.0)
         );
     }
 
@@ -120,7 +120,7 @@ mod tests {
             transformations::scaling(1.0, 0.5, 1.0) * transformations::rotation_z(PI / 5.0);
         sphere.transformation = transformation;
 
-        let normal = sphere.normal_at(Point::new(0.0, f32::sqrt(2.0) / 2.0, -f32::sqrt(2.0) / 2.0));
+        let normal = sphere.normal_at(Point::new(0.0, f64::sqrt(2.0) / 2.0, -f64::sqrt(2.0) / 2.0));
 
         assert_eq!(normal, Vector::new(0.0, 0.97014, -0.24254));
     }
