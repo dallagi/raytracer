@@ -14,15 +14,16 @@ impl Intersections {
         Self(vec![])
     }
 
-    /// merge multiple Intersections objects and sort the
-    /// resulting Intersections by t
+    /// merge multiple Intersections objects
+    /// and sort the resulting Intersections by t
     pub fn merge(intersections: Vec<Self>) -> Self {
         let mut inner_intersections: Vec<Intersection> = intersections
             .into_iter()
             .map(|intersection| intersection.0)
             .flatten()
             .collect();
-        inner_intersections.sort_by(|a, b| a.t.total_cmp(&b.t));
+
+        inner_intersections.sort_by(|intersection, other| intersection.t.total_cmp(&other.t));
 
         Self(inner_intersections)
     }
