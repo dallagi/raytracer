@@ -58,7 +58,7 @@ fn main() {
             if let Some(hit) = intersections.hit() {
                 let point = ray.position(hit.t);
                 let normal = hit.object.normal_at(point);
-                let eye = -ray.direction;
+                let eye = -ray.direction; // view vector (from shading point to eye point)
 
                 let color = lighting(hit.object.material, light, point, eye, normal);
 

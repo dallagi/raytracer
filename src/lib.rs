@@ -4,6 +4,7 @@ pub mod canvas;
 pub mod color;
 pub mod float_eq;
 pub mod intersection;
+pub mod intersection_state;
 pub mod intersections;
 pub mod light;
 pub mod lighting;
