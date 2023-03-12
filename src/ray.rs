@@ -29,7 +29,7 @@ impl Ray {
     pub fn intersect(self, object: Sphere) -> Intersections {
         let transformed_ray = self.transform(object.transformation.inverse());
 
-        let sphere_center = Point::new(0.0, 0.0, 0.0);
+        let sphere_center = Point::origin();
         let sphere_center_to_ray = transformed_ray.origin - sphere_center;
 
         let a = transformed_ray.direction.dot(transformed_ray.direction);
@@ -126,7 +126,7 @@ mod tests {
 
     #[test]
     fn a_ray_originating_inside_the_sphere_intersects_the_sphere_in_two_points() {
-        let ray = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 1.0));
+        let ray = Ray::new(Point::origin(), Vector::new(0.0, 0.0, 1.0));
         let sphere = Sphere::default();
 
         let intersections = ray.intersect(sphere);

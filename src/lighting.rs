@@ -59,7 +59,7 @@ mod tests {
     fn test_lighting_with_eye_between_light_and_surface() {
         // ambient, diffuse and specular components at full strength
         let material = Material::default();
-        let position = Point::new(0.0, 0.0, 0.0);
+        let position = Point::origin();
         let eye_v = Vector::new(0.0, 0.0, -1.0);
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
@@ -73,7 +73,7 @@ mod tests {
     fn lighting_with_eye_between_light_and_surface_with_eye_offset_45_degrees() {
         // specular component at roughly zero, ambient and diffuse at full strength
         let material = Material::default();
-        let position = Point::new(0.0, 0.0, 0.0);
+        let position = Point::origin();
         let eye_v = Vector::new(0.0, (2.0_f64).sqrt() / 2.0, -(2.0_f64).sqrt() / 2.0);
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
@@ -87,7 +87,7 @@ mod tests {
     fn lighting_with_eye_opposite_surface_light_offset_45() {
         // specular component at roughly zero
         let material = Material::default();
-        let position = Point::new(0.0, 0.0, 0.0);
+        let position = Point::origin();
         let eye_v = Vector::new(0.0, 0.0, -1.0);
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 10.0, -10.0), Color::new(1.0, 1.0, 1.0));
@@ -101,7 +101,7 @@ mod tests {
     fn lighting_with_eye_in_path_of_reflection_vector() {
         // specular component at full strength, ambient and diffuse same as previous test
         let material = Material::default();
-        let position = Point::new(0.0, 0.0, 0.0);
+        let position = Point::origin();
         let eyev = Vector::new(0.0, -(2.0_f64).sqrt() / 2.0, -(2.0_f64).sqrt() / 2.0);
         let normalv = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 10.0, -10.0), Color::new(1.0, 1.0, 1.0));
@@ -115,7 +115,7 @@ mod tests {
     fn lighting_with_light_behind_surface() {
         // in this case only the ambient lighting will be considered
         let material = Material::default();
-        let position = Point::new(0.0, 0.0, 0.0);
+        let position = Point::origin();
         let eye_v = Vector::new(0.0, 0.0, -1.0);
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 0.0, 10.0), Color::new(1.0, 1.0, 1.0));

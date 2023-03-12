@@ -126,7 +126,7 @@ mod tests {
             Color::new(1.0, 1.0, 1.0),
         )];
 
-        let ray = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 1.0));
+        let ray = Ray::new(Point::origin(), Vector::new(0.0, 0.0, 1.0));
         let shape = world.objects[1].clone();
         let intersection = Intersection::new(0.5, shape);
 

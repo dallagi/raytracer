@@ -82,7 +82,7 @@ mod tests {
 
     #[test]
     fn if_hit_happened_inside_the_object_inside_is_true_and_normal_is_inverted() {
-        let ray = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 1.0));
+        let ray = Ray::new(Point::origin(), Vector::new(0.0, 0.0, 1.0));
         let object = Sphere::default();
         let intersection = Intersection::new(1.0, object);
 

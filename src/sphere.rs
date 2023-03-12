@@ -18,14 +18,10 @@ impl Sphere {
         let inverse_transformation = self.transformation.inverse();
 
         let object_point = inverse_transformation * world_point;
-        let object_normal = (object_point - self.origin()).normalize();
+        let object_normal = (object_point - Point::origin()).normalize();
         let world_normal = inverse_transformation.transpose() * object_normal;
 
         world_normal.normalize()
-    }
-
-    pub fn origin(self) -> Point {
-        Point::new(0.0, 0.0, 0.0)
     }
 }
 
