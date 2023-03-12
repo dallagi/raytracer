@@ -4,9 +4,9 @@ A simple raytracer, built following [The Raytracer Challenge](http://raytracerch
 
 Implemented from scratch with zero external dependencies (except for test helpers).
 
-Current progress: _it renders a sphere_.
+Current progress: _it can render a simple scene with spheres_.
 
-![rendered sphere](https://raw.githubusercontent.com/dallagi/raytracer/main/examples/out/sphere.png)
+![rendered sphere](https://raw.githubusercontent.com/dallagi/raytracer/main/examples/out/scene.png)
 
 ## Run the examples
 
