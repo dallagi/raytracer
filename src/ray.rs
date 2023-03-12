@@ -48,11 +48,11 @@ impl Ray {
         Self::intersections_sorted_by_t(t1, t2, object)
     }
 
-    pub fn intersect_world(&self, world: World) -> Intersections {
+    pub fn intersect_world(&self, world: &World) -> Intersections {
         let all_intersections = world
             .objects
-            .into_iter()
-            .map(|object| self.intersect(object))
+            .iter()
+            .map(|object| self.intersect(object.clone()))
             .collect();
 
         Intersections::merge(all_intersections)
@@ -210,7 +210,7 @@ mod tests {
         let world = World::default();
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
 
-        let intersections = ray.intersect_world(world);
+        let intersections = ray.intersect_world(&world);
 
         assert_eq!(4, intersections.count());
         assert_eq!(4.0, intersections[0].t);
