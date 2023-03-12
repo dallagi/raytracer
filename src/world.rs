@@ -73,6 +73,19 @@ impl World {
 
         color
     }
+
+    fn is_shadowed(&self, light: Light, point: Point) -> bool {
+        let shadow_v = light.position - point;
+        let distance = shadow_v.magnitude();
+        let direction = shadow_v.normalize();
+
+        let shadow_ray = Ray::new(point, direction);
+        let intersections = shadow_ray.intersect_world(self);
+        match intersections.hit() {
+            Some(hit) if hit.t < distance => true,
+            _ => false,
+        }
+    }
 }
 
 #[cfg(test)]
@@ -194,5 +207,37 @@ mod tests {
         let color = world.color_at_intersection_with(ray);
 
         assert_eq!(inner.material.color, color)
+    }
+
+    #[test]
+    fn point_is_not_in_shadow_when_nothing_is_collinear_between_point_and_light() {
+        let world = World::default();
+        let point = Point::new(0.0, 10.0, 0.0);
+
+        assert_eq!(false, world.is_shadowed(world.lights[0], point))
+    }
+
+    #[test]
+    fn point_is_in_shadow_when_an_object_is_between_point_and_light() {
+        let world = World::default();
+        let point = Point::new(10.0, -10.0, 10.0);
+
+        assert!(world.is_shadowed(world.lights[0], point))
+    }
+
+    #[test]
+    fn point_is_not_in_shadow_when_it_is_behind_light() {
+        let world = World::default();
+        let point = Point::new(-20.0, 20.0, -20.0);
+
+        assert_eq!(false, world.is_shadowed(world.lights[0], point))
+    }
+
+    #[test]
+    fn point_is_not_in_shadow_when_an_object_is_behind_it() {
+        let world = World::default();
+        let point = Point::new(-2.0, 2.0, -2.0);
+
+        assert_eq!(false, world.is_shadowed(world.lights[0], point))
     }
 }
