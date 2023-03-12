@@ -52,7 +52,7 @@ impl Ray {
         let all_intersections = world
             .objects
             .iter()
-            .map(|object| self.intersect(object.clone()))
+            .map(|object| self.intersect(*object))
             .collect();
 
         Intersections::merge(all_intersections)

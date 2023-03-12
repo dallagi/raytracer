@@ -19,8 +19,7 @@ impl Intersections {
     pub fn merge(intersections: Vec<Self>) -> Self {
         let mut inner_intersections: Vec<Intersection> = intersections
             .into_iter()
-            .map(|intersection| intersection.0)
-            .flatten()
+            .flat_map(|intersection| intersection.0)
             .collect();
 
         inner_intersections.sort_by(|intersection, other| intersection.t.total_cmp(&other.t));
