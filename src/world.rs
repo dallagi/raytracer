@@ -67,7 +67,7 @@ impl World {
                 intersection_state.point,
                 intersection_state.eye_v,
                 intersection_state.normal_v,
-                false,
+                self.is_shadowed(*light, intersection_state.point),
             );
         }
 
@@ -176,6 +176,24 @@ mod tests {
         let color = world.shade_hit(intersection_state);
 
         assert_eq!(Color::new(0.75092, 0.93865, 0.56319), color);
+    }
+
+    #[test]
+    fn shading_an_intersection_in_the_shadow() {
+        let light = Light::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
+        let sphere_1 = Sphere::default();
+        let sphere_2 = Sphere {
+            transformation: transformations::translation(0.0, 0.0, 10.0),
+            ..Sphere::default()
+        };
+        let world = World::new(vec![light], vec![sphere_1, sphere_2]);
+        let ray = Ray::new(Point::new(0.0, 0.0, 5.0), Vector::new(0.0, 0.0, 1.0));
+        let intersection = Intersection::new(4.0, sphere_2);
+        let intersection_state = IntersectionState::prepare(intersection, ray);
+
+        let color = world.shade_hit(intersection_state);
+
+        assert_eq!(Color::new(0.1, 0.1, 0.1), color);
     }
 
     #[test]
