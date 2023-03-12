@@ -9,7 +9,7 @@ use crate::vector::Vector;
 /// * `to` - Point in the scene the eye should be looking at.
 /// * `up` - Which direction is up. No need for this vector to be normalized or perpendicular,
 ///          it should just roughly point to the correct direction.
-fn view_transform(from: Point, to: Point, up: Vector) -> Matrix<4, 4> {
+pub fn view_transform(from: Point, to: Point, up: Vector) -> Matrix<4, 4> {
     let forward = (to - from).normalize();
     let left = forward.cross(up.normalize());
 

@@ -42,7 +42,7 @@ impl Default for World {
 }
 
 impl World {
-    fn color_at_intersection_with(&self, ray: Ray) -> Color {
+    pub fn color_at_intersection_with(&self, ray: Ray) -> Color {
         let intersections = ray.intersect_world(self);
         let hit = match intersections.hit() {
             None => return Color::black(),
