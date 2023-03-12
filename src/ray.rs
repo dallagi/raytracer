@@ -45,11 +45,7 @@ impl Ray {
         let t1 = (-b - discriminant.sqrt()) / (2.0 * a);
         let t2 = (-b + discriminant.sqrt()) / (2.0 * a);
 
-        if t1 < t2 {
-            Intersections::of(&[Intersection::new(t1, object), Intersection::new(t2, object)])
-        } else {
-            Intersections::of(&[Intersection::new(t2, object), Intersection::new(t1, object)])
-        }
+        Self::intersections_sorted_by_t(t1, t2, object)
     }
 
     pub fn intersect_world(&self, world: World) -> Intersections {
@@ -67,6 +63,12 @@ impl Ray {
             origin: transformation_matrix * self.origin,
             direction: transformation_matrix * self.direction,
         }
+    }
+
+    fn intersections_sorted_by_t(t1: f64, t2: f64, object: Sphere) -> Intersections {
+        let (t1, t2) = if t1 < t2 { (t1, t2) } else { (t2, t1) };
+
+        Intersections::of(&[Intersection::new(t1, object), Intersection::new(t2, object)])
     }
 }
 
