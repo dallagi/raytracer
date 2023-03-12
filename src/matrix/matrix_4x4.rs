@@ -86,6 +86,8 @@ impl ops::Mul<Vector> for Matrix<4, 4> {
 impl ops::Shr<Matrix<4, 4>> for Matrix<4, 4> {
     type Output = Matrix<4, 4>;
 
+    /// Append a transformation matrix to another via the `>>` operator.
+    /// The rhs transformation will be logically executed *after* the lhs one.
     #[allow(clippy::suspicious_arithmetic_impl)]
     fn shr(self, other: Matrix<4, 4>) -> Self::Output {
         other * self

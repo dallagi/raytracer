@@ -15,4 +15,5 @@ pub mod ppm_writer;
 pub mod ray;
 pub mod sphere;
 pub mod vector;
+pub mod view_transform;
 pub mod world;
