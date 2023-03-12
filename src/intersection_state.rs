@@ -4,12 +4,19 @@ use crate::ray::Ray;
 use crate::sphere::Sphere;
 use crate::vector::Vector;
 
+const EPSILON: f64 = 0.000000001;
+
 /// Precomputed state for an intersection
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct IntersectionState {
     pub t: f64,
     pub object: Sphere,
     pub point: Point,
+    /// point slightly moved towards the direction of the normal
+    /// this will be used when testing for shadows, in order to bump
+    /// the point over the surface and avoid self-shadowing due to
+    /// unreliable floating point computations.
+    pub over_point: Point,
     pub eye_v: Vector,
     pub normal_v: Vector,
     /// whether the hit occurred inside the object
@@ -21,8 +28,11 @@ impl IntersectionState {
         let t = intersection.t;
         let object = intersection.object;
         let point = ray.position(t);
+
         let eye_v = -ray.direction;
         let mut normal_v = object.normal_at(point);
+        let over_point = point + normal_v * EPSILON;
+
         let mut inside = false;
 
         if Self::inside_object(normal_v, eye_v) {
@@ -35,6 +45,7 @@ impl IntersectionState {
             t,
             object,
             point,
+            over_point,
             eye_v,
             normal_v,
             inside,
@@ -52,6 +63,8 @@ impl IntersectionState {
 
 #[cfg(test)]
 mod tests {
+    use crate::matrix::transformations;
+
     use super::*;
 
     #[test]
@@ -92,5 +105,25 @@ mod tests {
         assert_eq!(Point::new(0.0, 0.0, 1.0), intersection_state.point);
         assert_eq!(Vector::new(0.0, 0.0, -1.0), intersection_state.eye_v);
         assert_eq!(Vector::new(0.0, 0.0, -1.0), intersection_state.normal_v);
+    }
+
+    #[test]
+    fn hit_should_offset_the_point() {
+        // over_point should be slightly bumped in the direction of the normal
+        // compared to the point, to move it above the surface and thus avoid
+        // bad results when testing for shadows due to unreliability of float
+        // point operations.
+
+        let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
+        let shape = Sphere {
+            transformation: transformations::translation(0.0, 0.0, 1.0),
+            ..Sphere::default()
+        };
+        let intersection = Intersection::new(5.0, shape);
+
+        let intersection_state = IntersectionState::prepare(intersection, ray);
+
+        assert!(intersection_state.over_point.z < -EPSILON / 2.0);
+        assert!(intersection_state.point.z > intersection_state.over_point.z)
     }
 }

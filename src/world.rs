@@ -67,7 +67,7 @@ impl World {
                 intersection_state.point,
                 intersection_state.eye_v,
                 intersection_state.normal_v,
-                self.is_shadowed(*light, intersection_state.point),
+                self.is_shadowed(*light, intersection_state.over_point),
             );
         }
 
@@ -158,7 +158,7 @@ mod tests {
         let intersection_state = IntersectionState::prepare(intersection, ray);
         let color = world.shade_hit(intersection_state);
 
-        assert_eq!(Color::new(0.90498, 0.90498, 0.90498), color);
+        assert_eq!(Color::new(0.1, 0.1, 0.1), color);
     }
 
     #[test]
