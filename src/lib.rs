@@ -1,5 +1,6 @@
 #![feature(generic_const_exprs)]
 
+mod camera;
 pub mod canvas;
 pub mod color;
 pub mod float_eq;
