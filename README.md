@@ -24,7 +24,7 @@ The rendered image will be saved in the `examples/out/` directory in the PPM for
 
 ### Differences from the book
 
-- There is no concept of tuple, points and vector have their own types
+- There is no concept of tuple: points and vector have their own types
 - Shading supports multiple sources of light
 
 ### Other notes
