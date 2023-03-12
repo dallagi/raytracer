@@ -74,6 +74,9 @@ impl World {
         color
     }
 
+    /// Check if a point is shadowed.
+    /// Creates a ray from the point to the light source, and checks
+    /// if it intersects any object before reaching the light.
     fn is_shadowed(&self, light: Light, point: Point) -> bool {
         let shadow_v = light.position - point;
         let distance = shadow_v.magnitude();
@@ -82,8 +85,12 @@ impl World {
         let shadow_ray = Ray::new(point, direction);
         let intersections = shadow_ray.intersect_world(self);
         match intersections.hit() {
+            // intersection between point and light
             Some(hit) if hit.t < distance => true,
-            _ => false,
+            // the object is on the other side of the light
+            Some(hit) => false,
+            // no intersections
+            None => false,
         }
     }
 }
