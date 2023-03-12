@@ -19,3 +19,13 @@ cargo run --release --example sphere
 ```
 
 The rendered image will be saved in the `examples/out/` directory in the PPM format.
+
+## Implementation notes
+
+### Differences from the book
+
+- There is no concept of tuple, points and vector have their own types
+- Shading supports multiple sources of light
+
+### Other notes
+- Matrices and matrix operations are implemented via const generics (where possible)
