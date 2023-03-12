@@ -67,6 +67,7 @@ impl World {
                 intersection_state.point,
                 intersection_state.eye_v,
                 intersection_state.normal_v,
+                false,
             );
         }
 

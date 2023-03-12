@@ -12,6 +12,7 @@ pub fn lighting(
     position: Point,
     eye_vector: Vector,
     normal_vector: Vector,
+    in_shadow: bool,
 ) -> Color {
     // combine the surface color with the light's color/intensity
     let effective_color = material.color * light.intensity;
@@ -21,6 +22,10 @@ pub fn lighting(
 
     // ambient contribution
     let ambient = effective_color * material.ambient;
+
+    if in_shadow {
+        return ambient;
+    }
 
     // light_dot_normal represents the cosine of the angle between the
     // light vector and the normal vector.
@@ -55,6 +60,8 @@ mod tests {
 
     use super::*;
 
+    use pretty_assertions::assert_eq;
+
     #[test]
     fn test_lighting_with_eye_between_light_and_surface() {
         // ambient, diffuse and specular components at full strength
@@ -64,7 +71,7 @@ mod tests {
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(material, light, position, eye_v, normal_v);
+        let result = lighting(material, light, position, eye_v, normal_v, false);
 
         assert_eq!(Color::new(1.9, 1.9, 1.9), result);
     }
@@ -78,7 +85,7 @@ mod tests {
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(material, light, position, eye_v, normal_v);
+        let result = lighting(material, light, position, eye_v, normal_v, false);
 
         assert_eq!(Color::new(1.0, 1.0, 1.0), result);
     }
@@ -92,7 +99,7 @@ mod tests {
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 10.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(material, light, position, eye_v, normal_v);
+        let result = lighting(material, light, position, eye_v, normal_v, false);
 
         assert_eq!(Color::new(0.7364, 0.7364, 0.7364), result);
     }
@@ -106,7 +113,7 @@ mod tests {
         let normalv = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 10.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(material, light, position, eyev, normalv);
+        let result = lighting(material, light, position, eyev, normalv, false);
 
         assert_eq!(Color::new(1.63638, 1.63638, 1.63638), result);
     }
@@ -120,7 +127,21 @@ mod tests {
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 0.0, 10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(material, light, position, eye_v, normal_v);
+        let result = lighting(material, light, position, eye_v, normal_v, false);
+
+        assert_eq!(Color::new(0.1, 0.1, 0.1), result);
+    }
+
+    #[test]
+    fn test_lighting_with_surface_in_shadow() {
+        // in this case only ambient contribution is considered
+        let material = Material::default();
+        let position = Point::origin();
+        let eye_v = Vector::new(0.0, 0.0, -1.0);
+        let normal_v = Vector::new(0.0, 0.0, -1.0);
+        let light = Light::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
+
+        let result = lighting(material, light, position, eye_v, normal_v, true);
 
         assert_eq!(Color::new(0.1, 0.1, 0.1), result);
     }

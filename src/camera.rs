@@ -109,6 +109,7 @@ impl Camera {
 mod tests {
     use std::f64::consts::PI;
 
+    use crate::color::Color;
     use crate::float_eq::FloatEq;
     use crate::matrix::transformations;
     use crate::point::Point;
