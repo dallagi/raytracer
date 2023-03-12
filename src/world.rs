@@ -6,13 +6,16 @@ use crate::point::Point;
 use crate::sphere::Sphere;
 
 pub struct World {
-    pub light: Light,
+    pub lights: Vec<Light>,
     pub objects: Vec<Sphere>,
 }
 
 impl Default for World {
     fn default() -> Self {
-        let light = Light::new(Point::new(-10.0, 10.0, -10.0), Color::new(1.0, 1.0, 1.0));
+        let lights = vec![Light::new(
+            Point::new(-10.0, 10.0, -10.0),
+            Color::new(1.0, 1.0, 1.0),
+        )];
         let sphere_1 = Sphere {
             material: Material {
                 color: Color::new(0.8, 1.0, 0.6),
@@ -29,7 +32,7 @@ impl Default for World {
         };
 
         Self {
-            light,
+            lights,
             objects: vec![sphere_1, sphere_2],
         }
     }
@@ -60,7 +63,7 @@ mod tests {
 
         let default_world = World::default();
 
-        assert_eq!(expected_light, default_world.light);
+        assert_eq!(vec![expected_light], default_world.lights);
         assert!(default_world.objects.contains(&expected_sphere_1));
         assert!(default_world.objects.contains(&expected_sphere_2));
     }

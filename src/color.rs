@@ -51,6 +51,14 @@ impl ops::Add for Color {
     }
 }
 
+impl ops::AddAssign for Color {
+    fn add_assign(&mut self, other: Self) {
+        self.red += other.red;
+        self.green += other.green;
+        self.blue += other.blue;
+    }
+}
+
 impl ops::Sub for Color {
     type Output = Color;
 
