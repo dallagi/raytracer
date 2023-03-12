@@ -13,6 +13,7 @@ pub mod matrix;
 pub mod point;
 pub mod ppm_writer;
 pub mod ray;
+pub mod shading;
 pub mod sphere;
 pub mod vector;
 pub mod world;

@@ -6,7 +6,7 @@ use crate::vector::Vector;
 
 /// Precomputed state for an intersection
 #[derive(Clone)]
-struct IntersectionState {
+pub struct IntersectionState {
     pub t: f64,
     pub object: Sphere,
     pub point: Point,
@@ -27,6 +27,7 @@ impl IntersectionState {
 
         if Self::inside_object(normal_v, eye_v) {
             inside = true;
+            // reverse the normal, since we're inside the object
             normal_v = -normal_v;
         }
 
@@ -41,8 +42,10 @@ impl IntersectionState {
     }
 
     fn inside_object(normal_v: Vector, eye_v: Vector) -> bool {
-        // if eye vector and normal vector point in (roughly)
-        // opposite directions, then we're probably inside the object
+        // if normal vector (roughly) points away from the eye vector
+        // then we're probably inside the object.
+        // Remember that the eye vector points *towards* the eye, ie.
+        // opposite to the ray directioin.
         normal_v.dot(eye_v) < 0.0
     }
 }

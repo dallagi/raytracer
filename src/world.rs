@@ -40,6 +40,7 @@ mod tests {
 
     use super::*;
 
+    #[test]
     fn default_world_contains_two_spheres() {
         let expected_light = Light::new(Point::new(-10.0, 10.0, -10.0), Color::new(1.0, 1.0, 1.0));
         let expected_sphere_1 = Sphere {
