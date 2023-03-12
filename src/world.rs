@@ -42,6 +42,10 @@ impl Default for World {
 }
 
 impl World {
+    pub fn new(lights: Vec<Light>, objects: Vec<Sphere>) -> Self {
+        Self { lights, objects }
+    }
+
     pub fn color_at_intersection_with(&self, ray: Ray) -> Color {
         let intersections = ray.intersect_world(self);
         let hit = match intersections.hit() {

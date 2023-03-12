@@ -6,7 +6,7 @@ use crate::world::World;
 
 // TODO: rename fields to better clarify between camera/rendered canvas
 
-struct Camera {
+pub struct Camera {
     /// Horizontal size (in pixels) of the rendered canvas
     hsize: usize,
     /// Vertical size (in pixels) of the rendered canvas
