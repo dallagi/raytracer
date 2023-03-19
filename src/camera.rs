@@ -57,6 +57,8 @@ impl Camera {
         let mut image = Canvas::new(self.hsize, self.vsize);
 
         for y in 0..self.vsize {
+            self.print_progress(y);
+
             for x in 0..self.hsize {
                 let ray = self.ray_for_pixel(x, y);
                 let color = world.color_at_intersection_with(ray);
@@ -64,7 +66,15 @@ impl Camera {
             }
         }
 
+        println!("\nDone.");
         image
+    }
+
+    fn print_progress(&self, y: usize) {
+        let pixels_count = self.hsize * self.vsize;
+        let progress_percentage =
+            (((self.hsize * y) as f64 / pixels_count as f64) * 100_f64).round();
+        print!("\rRendering... {progress_percentage}%");
     }
 
     /// Builds a ray that starts from the camera and passes through pixel (x, y) on the canvas

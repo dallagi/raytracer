@@ -4,16 +4,13 @@ use std::f64::consts::PI;
 use std::fs::File;
 
 use raytracer::camera::Camera;
-use raytracer::canvas::Canvas;
 use raytracer::color::Color;
 use raytracer::light::Light;
-use raytracer::lighting::lighting;
 use raytracer::material::Material;
 use raytracer::matrix::transformations;
+use raytracer::object::Object;
 use raytracer::point::Point;
 use raytracer::ppm_writer::PpmWriter;
-use raytracer::ray::Ray;
-use raytracer::sphere::Sphere;
 use raytracer::vector::Vector;
 use raytracer::view_transform;
 use raytracer::world::World;
@@ -56,69 +53,65 @@ fn main() {
     println!("Done");
 }
 
-fn large_sphere() -> Sphere {
-    Sphere {
-        transformation: transformations::translation(-0.5, 1.0, 0.5),
-        material: Material {
+fn large_sphere() -> Object {
+    Object::sphere(
+        transformations::translation(-0.5, 1.0, 0.5),
+        Material {
             color: Color::new(0.1, 1.0, 0.5),
             diffuse: 0.7,
             specular: 0.3,
             ..Material::default()
         },
-    }
+    )
 }
 
-fn small_sphere() -> Sphere {
-    Sphere {
-        transformation: transformations::scaling(0.5, 0.5, 0.5)
-            >> transformations::translation(1.5, 0.5, -0.5),
-        material: Material {
+fn small_sphere() -> Object {
+    Object::sphere(
+        transformations::scaling(0.5, 0.5, 0.5) >> transformations::translation(1.5, 0.5, -0.5),
+        Material {
             color: Color::new(0.5, 1.0, 0.1),
             diffuse: 0.7,
             specular: 0.3,
             ..Material::default()
         },
-    }
+    )
 }
 
-fn smallest_sphere() -> Sphere {
-    Sphere {
-        transformation: transformations::scaling(0.33, 0.33, 0.33)
+fn smallest_sphere() -> Object {
+    Object::sphere(
+        transformations::scaling(0.33, 0.33, 0.33)
             >> transformations::translation(-1.5, 0.33, -0.75),
-        material: Material {
+        Material {
             color: Color::new(0.5, 1.0, 0.1),
             diffuse: 0.7,
             specular: 0.3,
             ..Material::default()
         },
-    }
+    )
 }
 
-fn floor() -> Sphere {
-    Sphere {
-        transformation: transformations::scaling(10.0, 0.01, 10.0),
-        material: wall_material(),
-    }
+fn floor() -> Object {
+    Object::sphere(transformations::scaling(10.0, 0.01, 10.0), wall_material())
 }
 
-fn left_wall() -> Sphere {
-    Sphere {
-        transformation: transformations::scaling(10.0, 0.01, 10.0)
+fn left_wall() -> Object {
+    Object::sphere(
+        transformations::scaling(10.0, 0.01, 10.0)
             >> transformations::rotation_x(PI / 2.0)
             >> transformations::rotation_y(-PI / 4.0)
             >> transformations::translation(0.0, 0.0, 5.0),
-        material: wall_material(),
-    }
+        wall_material(),
+    )
 }
 
-fn right_wall() -> Sphere {
-    Sphere {
-        transformation: transformations::scaling(10.0, 0.01, 10.0)
+fn right_wall() -> Object {
+    Object::sphere(
+        transformations::scaling(10.0, 0.01, 10.0)
             >> transformations::rotation_x(PI / 2.0)
             >> transformations::rotation_y(PI / 4.0)
             >> transformations::translation(0.0, 0.0, 5.0),
-        material: wall_material(),
-    }
+        wall_material(),
+    )
 }
 
 fn wall_material() -> Material {

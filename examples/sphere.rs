@@ -7,16 +7,16 @@ use raytracer::color::Color;
 use raytracer::light::Light;
 use raytracer::lighting::lighting;
 use raytracer::material::Material;
+use raytracer::object::Object;
 use raytracer::point::Point;
 use raytracer::ppm_writer::PpmWriter;
 use raytracer::ray::Ray;
-use raytracer::sphere::Sphere;
 
 const CANVAS_SIZE: usize = 500;
 
 fn main() {
     let mut canvas = Canvas::new(CANVAS_SIZE, CANVAS_SIZE);
-    let mut sphere = Sphere::default();
+    let mut sphere = Object::default();
     sphere.material = Material {
         color: Color::new(1.0, 0.2, 1.0),
         shininess: 200.0,

@@ -1,7 +1,7 @@
 use crate::intersection::Intersection;
+use crate::object::Object;
 use crate::point::Point;
 use crate::ray::Ray;
-use crate::sphere::Sphere;
 use crate::vector::Vector;
 
 const EPSILON: f64 = 0.000000001;
@@ -10,7 +10,7 @@ const EPSILON: f64 = 0.000000001;
 #[derive(Clone, Debug)]
 pub struct IntersectionState {
     pub t: f64,
-    pub object: Sphere,
+    pub object: Object,
     pub point: Point,
     /// point slightly moved towards the direction of the normal
     /// this will be used when testing for shadows, in order to bump
@@ -70,7 +70,7 @@ mod tests {
     #[test]
     fn precomputing_the_state_of_an_intersection() {
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let object = Sphere::default();
+        let object = Object::default();
         let intersection = Intersection::new(4.0, object);
 
         let intersection_state = IntersectionState::prepare(intersection, ray);
@@ -85,7 +85,7 @@ mod tests {
     #[test]
     fn if_hit_happened_outside_the_object_inside_is_false() {
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let object = Sphere::default();
+        let object = Object::default();
         let intersection = Intersection::new(4.0, object);
 
         let intersection_state = IntersectionState::prepare(intersection, ray);
@@ -96,7 +96,7 @@ mod tests {
     #[test]
     fn if_hit_happened_inside_the_object_inside_is_true_and_normal_is_inverted() {
         let ray = Ray::new(Point::origin(), Vector::new(0.0, 0.0, 1.0));
-        let object = Sphere::default();
+        let object = Object::default();
         let intersection = Intersection::new(1.0, object);
 
         let intersection_state = IntersectionState::prepare(intersection, ray);
@@ -115,9 +115,9 @@ mod tests {
         // point operations.
 
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let shape = Sphere {
+        let shape = Object {
             transformation: transformations::translation(0.0, 0.0, 1.0),
-            ..Sphere::default()
+            ..Object::default()
         };
         let intersection = Intersection::new(5.0, shape);
 

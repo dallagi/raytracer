@@ -4,13 +4,13 @@ use crate::light::Light;
 use crate::lighting::lighting;
 use crate::material::Material;
 use crate::matrix::transformations;
+use crate::object::Object;
 use crate::point::Point;
 use crate::ray::Ray;
-use crate::sphere::Sphere;
 
 pub struct World {
     pub lights: Vec<Light>,
-    pub objects: Vec<Sphere>,
+    pub objects: Vec<Object>,
 }
 
 impl Default for World {
@@ -19,7 +19,7 @@ impl Default for World {
             Point::new(-10.0, 10.0, -10.0),
             Color::new(1.0, 1.0, 1.0),
         )];
-        let sphere_1 = Sphere {
+        let sphere_1 = Object {
             material: Material {
                 color: Color::new(0.8, 1.0, 0.6),
                 diffuse: 0.7,
@@ -29,7 +29,7 @@ impl Default for World {
             ..Default::default()
         };
 
-        let sphere_2 = Sphere {
+        let sphere_2 = Object {
             transformation: transformations::scaling(0.5, 0.5, 0.5),
             ..Default::default()
         };
@@ -42,7 +42,7 @@ impl Default for World {
 }
 
 impl World {
-    pub fn new(lights: Vec<Light>, objects: Vec<Sphere>) -> Self {
+    pub fn new(lights: Vec<Light>, objects: Vec<Object>) -> Self {
         Self { lights, objects }
     }
 
@@ -88,7 +88,7 @@ impl World {
             // intersection between point and light
             Some(hit) if hit.t < distance => true,
             // the object is on the other side of the light
-            Some(hit) => false,
+            Some(_hit) => false,
             // no intersections
             None => false,
         }
@@ -108,7 +108,7 @@ mod tests {
     #[test]
     fn default_world_contains_two_spheres() {
         let expected_light = Light::new(Point::new(-10.0, 10.0, -10.0), Color::new(1.0, 1.0, 1.0));
-        let expected_sphere_1 = Sphere {
+        let expected_sphere_1 = Object {
             material: Material {
                 color: Color::new(0.8, 1.0, 0.6),
                 diffuse: 0.7,
@@ -118,7 +118,7 @@ mod tests {
             ..Default::default()
         };
 
-        let expected_sphere_2 = Sphere {
+        let expected_sphere_2 = Object {
             transformation: transformations::scaling(0.5, 0.5, 0.5),
             ..Default::default()
         };
@@ -181,10 +181,10 @@ mod tests {
     #[test]
     fn shading_an_intersection_in_the_shadow() {
         let light = Light::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
-        let sphere_1 = Sphere::default();
-        let sphere_2 = Sphere {
+        let sphere_1 = Object::default();
+        let sphere_2 = Object {
             transformation: transformations::translation(0.0, 0.0, 10.0),
-            ..Sphere::default()
+            ..Object::default()
         };
         let world = World::new(vec![light], vec![sphere_1, sphere_2]);
         let ray = Ray::new(Point::new(0.0, 0.0, 5.0), Vector::new(0.0, 0.0, 1.0));

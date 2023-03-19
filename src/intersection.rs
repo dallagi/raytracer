@@ -1,14 +1,14 @@
 use crate::float_eq::FloatEq;
-use crate::sphere::Sphere;
+use crate::object::Object;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Intersection {
     pub t: f64,
-    pub object: Sphere,
+    pub object: Object,
 }
 
 impl Intersection {
-    pub fn new(t: f64, object: Sphere) -> Self {
+    pub fn new(t: f64, object: Object) -> Self {
         Self { t, object }
     }
 }
@@ -27,7 +27,7 @@ mod tests {
 
     #[test]
     fn intersectin_encapsulates_t_and_object() {
-        let sphere = Sphere::default();
+        let sphere = Object::default();
         let intersection = Intersection::new(3.5, sphere);
 
         assert_eq!(3.5, intersection.t);
