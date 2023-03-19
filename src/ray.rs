@@ -1,7 +1,9 @@
 use crate::intersection::Intersection;
 use crate::intersections::Intersections;
 use crate::matrix::Matrix;
+use crate::object::sphere;
 use crate::object::Object;
+use crate::object::Shape;
 use crate::point::Point;
 use crate::vector::Vector;
 use crate::world::World;
@@ -21,31 +23,12 @@ impl Ray {
         self.origin + self.direction * t
     }
 
-    /// Returns the values of t at which the ray will intersect a sphere.
-    /// Returns None if no intersection exists.
-    /// For single intersections (ie. tangent lines), it will return the same t two times.
-    ///
-    /// See https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
     pub fn intersect(self, object: Object) -> Intersections {
         let transformed_ray = self.transform(object.transformation.inverse());
 
-        let sphere_center = Point::origin();
-        let sphere_center_to_ray = transformed_ray.origin - sphere_center;
-
-        let a = transformed_ray.direction.dot(transformed_ray.direction);
-        let b = 2.0 * transformed_ray.direction.dot(sphere_center_to_ray);
-        let c = sphere_center_to_ray.dot(sphere_center_to_ray) - 1.0;
-
-        let discriminant = b.powf(2.0) - 4.0 * a * c;
-
-        if discriminant < 0.0 {
-            return Intersections::empty();
-        };
-
-        let t1 = (-b - discriminant.sqrt()) / (2.0 * a);
-        let t2 = (-b + discriminant.sqrt()) / (2.0 * a);
-
-        Self::intersections_sorted_by_t(t1, t2, object)
+        match object.shape {
+            Shape::Sphere => sphere::object_intersect_at(object, transformed_ray),
+        }
     }
 
     pub fn intersect_world(&self, world: &World) -> Intersections {
@@ -74,6 +57,7 @@ impl Ray {
 
 #[cfg(test)]
 mod tests {
+    use crate::material::Material;
     use crate::matrix::transformations;
     use crate::object::Object;
     use crate::world::World;
@@ -104,61 +88,18 @@ mod tests {
     }
 
     #[test]
-    fn a_ray_can_intersect_a_sphere_at_two_points() {
+    fn ray_is_transformed_to_object_space_before_calculating_intersection_with_object() {
         let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Object::default();
-
-        // t values at which the ray intersects the sphere
-        let intersections = ray.intersect(sphere);
-
-        assert_eq!(2, intersections.count());
-        assert_eq!(4.0, intersections[0].t);
-        assert_eq!(6.0, intersections[1].t);
-    }
-
-    #[test]
-    fn a_ray_can_miss_a_sphere() {
-        let ray = Ray::new(Point::new(0.0, 2.0, 5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Object::default();
-
-        let intersect_ts = ray.intersect(sphere);
-
-        assert_eq!(Intersections::empty(), intersect_ts)
-    }
-
-    #[test]
-    fn a_ray_originating_inside_the_sphere_intersects_the_sphere_in_two_points() {
-        let ray = Ray::new(Point::origin(), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Object::default();
+        let sphere = Object::sphere(
+            transformations::translation(0.0, 0.0, 5.0),
+            Material::default(),
+        );
 
         let intersections = ray.intersect(sphere);
 
         assert_eq!(2, intersections.count());
-        assert_eq!(-1.0, intersections[0].t);
-        assert_eq!(1.0, intersections[1].t);
-    }
-
-    #[test]
-    fn a_ray_can_intersect_a_sphere_behind_it_two_times() {
-        let ray = Ray::new(Point::new(0.0, 0.0, 5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Object::default();
-
-        let intersections = ray.intersect(sphere);
-
-        assert_eq!(2, intersections.count());
-        assert_eq!(-6.0, intersections[0].t);
-        assert_eq!(-4.0, intersections[1].t);
-    }
-
-    #[test]
-    fn intersect_sets_the_object_of_the_intersection() {
-        let ray = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let sphere = Object::default();
-
-        let intersections = ray.intersect(sphere);
-
-        assert_eq!(sphere, intersections[0].object);
-        assert_eq!(sphere, intersections[1].object);
+        assert_eq!(9.0, intersections[0].t);
+        assert_eq!(11.0, intersections[1].t);
     }
 
     #[test]

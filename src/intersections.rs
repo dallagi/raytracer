@@ -7,7 +7,7 @@ pub struct Intersections(Vec<Intersection>);
 
 impl Intersections {
     pub fn of(intersections: &[Intersection]) -> Self {
-        Self(intersections.to_vec())
+        Self(intersections.to_vec()).sorted_by_t()
     }
 
     pub fn empty() -> Self {
@@ -17,14 +17,12 @@ impl Intersections {
     /// merge multiple Intersections objects
     /// and sort the resulting Intersections by t
     pub fn merge(intersections: Vec<Self>) -> Self {
-        let mut inner_intersections: Vec<Intersection> = intersections
+        let inner_intersections: Vec<Intersection> = intersections
             .into_iter()
             .flat_map(|intersection| intersection.0)
             .collect();
 
-        inner_intersections.sort_by(|intersection, other| intersection.t.total_cmp(&other.t));
-
-        Self(inner_intersections)
+        Self::of(&inner_intersections)
     }
 
     pub fn count(&self) -> usize {
@@ -37,6 +35,13 @@ impl Intersections {
             .filter(|intersection| intersection.t >= 0.0)
             .min_by(|i1, i2| i1.t.total_cmp(&i2.t))
             .copied()
+    }
+
+    pub fn sorted_by_t(mut self) -> Self {
+        self.0
+            .sort_by(|intersection, other| intersection.t.total_cmp(&other.t));
+
+        self
     }
 }
 

@@ -1,4 +1,4 @@
-mod sphere;
+pub mod sphere;
 
 use crate::{material::Material, matrix::Matrix, point::Point, vector::Vector};
 
