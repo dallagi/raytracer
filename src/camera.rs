@@ -93,7 +93,7 @@ impl Camera {
         let transformed_origin = self.transform.inverse() * Point::origin();
         let direction = (transformed_pixel - transformed_origin).normalize();
 
-        return Ray::new(transformed_origin, direction);
+        Ray::new(transformed_origin, direction)
     }
 
     fn set_canvas_properties(&mut self) {

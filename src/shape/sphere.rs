@@ -53,21 +53,18 @@ mod tests {
 
     #[test]
     fn normal_on_sphere_at_y_axis() {
-        let sphere = Object::default();
         let normal = object_normal_at(Point::new(0.0, 1.0, 0.0));
         assert_eq!(normal, Vector::new(0.0, 1.0, 0.0));
     }
 
     #[test]
     fn normal_on_sphere_at_z_axis() {
-        let sphere = Object::default();
         let normal = object_normal_at(Point::new(0.0, 0.0, 1.0));
         assert_eq!(normal, Vector::new(0.0, 0.0, 1.0));
     }
 
     #[test]
     fn normal_on_sphere_at_nonaxial_point() {
-        let sphere = Object::default();
         let point = Point::new(3f64.sqrt() / 3.0, 3f64.sqrt() / 3.0, 3f64.sqrt() / 3.0);
         let normal = object_normal_at(point);
         assert_eq!(

@@ -15,6 +15,7 @@ pub mod object;
 pub mod point;
 pub mod ppm_writer;
 pub mod ray;
+pub mod shape;
 pub mod vector;
 pub mod view_transform;
 pub mod world;

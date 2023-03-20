@@ -1,9 +1,6 @@
-use crate::intersection::Intersection;
 use crate::intersections::Intersections;
 use crate::matrix::Matrix;
-use crate::object::sphere;
 use crate::object::Object;
-use crate::object::Shape;
 use crate::point::Point;
 use crate::vector::Vector;
 use crate::world::World;
@@ -26,9 +23,7 @@ impl Ray {
     pub fn intersect(self, object: Object) -> Intersections {
         let transformed_ray = self.transform(object.transformation.inverse());
 
-        match object.shape {
-            Shape::Sphere => sphere::object_intersect_at(object, transformed_ray),
-        }
+        object.shape.object_intersect_at(object, transformed_ray)
     }
 
     pub fn intersect_world(&self, world: &World) -> Intersections {
@@ -46,12 +41,6 @@ impl Ray {
             origin: transformation_matrix * self.origin,
             direction: transformation_matrix * self.direction,
         }
-    }
-
-    fn intersections_sorted_by_t(t1: f64, t2: f64, object: Object) -> Intersections {
-        let (t1, t2) = if t1 < t2 { (t1, t2) } else { (t2, t1) };
-
-        Intersections::of(&[Intersection::new(t1, object), Intersection::new(t2, object)])
     }
 }
 

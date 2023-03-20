@@ -1,11 +1,8 @@
-pub mod sphere;
-
-use crate::{material::Material, matrix::Matrix, point::Point, vector::Vector};
-
-#[derive(Copy, Clone, Debug, PartialEq)]
-pub enum Shape {
-    Sphere,
-}
+use crate::material::Material;
+use crate::matrix::Matrix;
+use crate::point::Point;
+use crate::shape::Shape;
+use crate::vector::Vector;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Object {
@@ -25,18 +22,12 @@ impl Object {
 
     pub fn normal_at(self, world_point: Point) -> Vector {
         let inverse_transformation = self.transformation.inverse();
-
         let object_point = inverse_transformation * world_point;
-        let object_normal = self.object_normal_at(object_point);
+
+        let object_normal = self.shape.object_normal_at(object_point);
+
         let world_normal = inverse_transformation.transpose() * object_normal;
-
         world_normal.normalize()
-    }
-
-    fn object_normal_at(self, object_point: Point) -> Vector {
-        match self.shape {
-            Shape::Sphere => sphere::object_normal_at(object_point),
-        }
     }
 }
 
