@@ -4,6 +4,7 @@ use crate::point::Point;
 
 mod stripe;
 
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Pattern {
     Solid(Color),
     Stripe(StripeProperties),
@@ -20,7 +21,7 @@ impl Pattern {
 
     pub fn color_at(&self, point: Point) -> Color {
         match self {
-            Pattern::Solid(color) => color.clone(),
+            Pattern::Solid(color) => *color,
             Pattern::Stripe(stripe_properties) => stripe_properties.stripe_at(point),
         }
     }

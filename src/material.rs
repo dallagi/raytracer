@@ -1,9 +1,10 @@
 use crate::color::Color;
 use crate::float_eq::FloatEq;
+use crate::pattern::Pattern;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Material {
-    pub color: Color,
+    pub pattern: Pattern,
     pub ambient: f64,   // usually 0..1
     pub diffuse: f64,   // usually 0..1
     pub specular: f64,  // usually 0..1
@@ -11,14 +12,14 @@ pub struct Material {
 }
 
 impl Material {
-    fn new(color: Color, ambient: f64, diffuse: f64, specular: f64, shininess: f64) -> Self {
+    fn new(pattern: Pattern, ambient: f64, diffuse: f64, specular: f64, shininess: f64) -> Self {
         assert!(ambient >= 0.0, "Ambient must be nonnegative");
         assert!(diffuse >= 0.0, "Diffuse must be nonnegative");
         assert!(specular >= 0.0, "Specular must be nonnegative");
         assert!(shininess >= 0.0, "Shininess must be nonnegative");
 
         Self {
-            color,
+            pattern,
             ambient,
             diffuse,
             specular,
@@ -30,7 +31,7 @@ impl Material {
 impl Default for Material {
     fn default() -> Self {
         Self {
-            color: Color::new(1.0, 1.0, 1.0),
+            pattern: Pattern::solid(Color::white()),
             ambient: 0.1,
             diffuse: 0.9,
             specular: 0.9,
@@ -41,7 +42,7 @@ impl Default for Material {
 
 impl PartialEq for Material {
     fn eq(&self, other: &Self) -> bool {
-        self.color == other.color
+        self.pattern == other.pattern
             && self.ambient.float_eq(other.ambient)
             && self.diffuse.float_eq(other.diffuse)
             && self.specular.float_eq(other.specular)
@@ -57,7 +58,7 @@ mod tests {
     fn has_default_material() {
         let m = Material::default();
 
-        assert_eq!(m.color, Color::new(1.0, 1.0, 1.0));
+        assert_eq!(m.pattern, Pattern::solid(Color::new(1.0, 1.0, 1.0)));
         assert_eq!(m.ambient, 0.1);
         assert_eq!(m.diffuse, 0.9);
         assert_eq!(m.specular, 0.9);

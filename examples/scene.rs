@@ -9,6 +9,7 @@ use raytracer::light::Light;
 use raytracer::material::Material;
 use raytracer::matrix::transformations;
 use raytracer::object::Object;
+use raytracer::pattern::Pattern;
 use raytracer::point::Point;
 use raytracer::ppm_writer::PpmWriter;
 use raytracer::vector::Vector;
@@ -57,7 +58,7 @@ fn large_sphere() -> Object {
     Object::sphere(
         transformations::translation(-0.5, 1.0, 0.5),
         Material {
-            color: Color::new(0.1, 1.0, 0.5),
+            pattern: Pattern::solid(Color::new(0.1, 1.0, 0.5)),
             diffuse: 0.7,
             specular: 0.3,
             ..Material::default()
@@ -69,7 +70,7 @@ fn small_sphere() -> Object {
     Object::sphere(
         transformations::scaling(0.5, 0.5, 0.5) >> transformations::translation(1.5, 0.5, -0.5),
         Material {
-            color: Color::new(0.5, 1.0, 0.1),
+            pattern: Pattern::solid(Color::new(0.5, 1.0, 0.1)),
             diffuse: 0.7,
             specular: 0.3,
             ..Material::default()
@@ -82,7 +83,7 @@ fn smallest_sphere() -> Object {
         transformations::scaling(0.33, 0.33, 0.33)
             >> transformations::translation(-1.5, 0.33, -0.75),
         Material {
-            color: Color::new(0.5, 1.0, 0.1),
+            pattern: Pattern::solid(Color::new(0.5, 1.0, 0.1)),
             diffuse: 0.7,
             specular: 0.3,
             ..Material::default()
@@ -116,7 +117,7 @@ fn right_wall() -> Object {
 
 fn wall_material() -> Material {
     Material {
-        color: Color::new(1.0, 0.9, 0.9),
+        pattern: Pattern::solid(Color::new(1.0, 0.9, 0.9)),
         specular: 0.0,
         ..Material::default()
     }

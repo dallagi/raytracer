@@ -5,6 +5,7 @@ use crate::lighting::lighting;
 use crate::material::Material;
 use crate::matrix::transformations;
 use crate::object::Object;
+use crate::pattern::Pattern;
 use crate::point::Point;
 use crate::ray::Ray;
 
@@ -21,7 +22,7 @@ impl Default for World {
         )];
         let sphere_1 = Object {
             material: Material {
-                color: Color::new(0.8, 1.0, 0.6),
+                pattern: Pattern::solid(Color::new(0.8, 1.0, 0.6)),
                 diffuse: 0.7,
                 specular: 0.2,
                 ..Default::default()
@@ -99,6 +100,7 @@ impl World {
 mod tests {
 
     use crate::intersection::Intersection;
+    use crate::pattern::Pattern;
     use crate::vector::Vector;
 
     use pretty_assertions::assert_eq;
@@ -110,7 +112,7 @@ mod tests {
         let expected_light = Light::new(Point::new(-10.0, 10.0, -10.0), Color::new(1.0, 1.0, 1.0));
         let expected_sphere_1 = Object {
             material: Material {
-                color: Color::new(0.8, 1.0, 0.6),
+                pattern: Pattern::solid(Color::new(0.8, 1.0, 0.6)),
                 diffuse: 0.7,
                 specular: 0.2,
                 ..Default::default()
@@ -219,11 +221,13 @@ mod tests {
     #[test]
     fn color_is_computed_appropriately_when_ray_originating_from_within_an_outer_object_hits_the_outside_of_an_inner_object(
     ) {
+        let inner_color = Color::white();
         let mut world = World::default();
         {
             let outer = world.objects.get_mut(0).unwrap();
             outer.material.ambient = 1.0;
             let mut inner = world.objects.get_mut(1).unwrap();
+            inner.material.pattern = Pattern::solid(inner_color);
             inner.material.ambient = 1.0;
         }
         let inner = world.objects[1];
@@ -231,7 +235,7 @@ mod tests {
 
         let color = world.color_at_intersection_with(ray);
 
-        assert_eq!(inner.material.color, color)
+        assert_eq!(inner_color, color)
     }
 
     #[test]

@@ -8,6 +8,7 @@ use raytracer::light::Light;
 use raytracer::lighting::lighting;
 use raytracer::material::Material;
 use raytracer::object::Object;
+use raytracer::pattern::Pattern;
 use raytracer::point::Point;
 use raytracer::ppm_writer::PpmWriter;
 use raytracer::ray::Ray;
@@ -18,7 +19,7 @@ fn main() {
     let mut canvas = Canvas::new(CANVAS_SIZE, CANVAS_SIZE);
     let mut sphere = Object::default();
     sphere.material = Material {
-        color: Color::new(1.0, 0.2, 1.0),
+        pattern: Pattern::solid(Color::new(1.0, 0.2, 1.0)),
         shininess: 200.0,
         ..Default::default()
     };

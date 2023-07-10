@@ -15,7 +15,7 @@ pub fn lighting(
     in_shadow: bool,
 ) -> Color {
     // combine the surface color with the light's color/intensity
-    let effective_color = material.color * light.intensity;
+    let effective_color = material.pattern.color_at(position) * light.intensity;
 
     // direction to the light source
     let light_vector = (light.position - position).normalize();
@@ -57,6 +57,8 @@ pub fn lighting(
 
 #[cfg(test)]
 mod tests {
+
+    use crate::pattern::Pattern;
 
     use super::*;
 
@@ -144,5 +146,40 @@ mod tests {
         let result = lighting(material, light, position, eye_v, normal_v, true);
 
         assert_eq!(Color::new(0.1, 0.1, 0.1), result);
+    }
+
+    #[test]
+    fn test_lighting_with_non_solid_pattern_on_object_material() {
+        let material = Material {
+            pattern: Pattern::stripe(Color::white(), Color::black()),
+            // keep only ambient contribution to make it easier to test pattern
+            ambient: 1.0,
+            diffuse: 0.0,
+            specular: 0.0,
+            ..Material::default()
+        };
+        let eye_v = Vector::new(0.0, 0.0, -1.0);
+        let normal_v = Vector::new(0.0, 0.0, -1.0);
+        let light = Light::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
+
+        let color_1 = lighting(
+            material,
+            light,
+            Point::new(0.9, 0.0, 0.0),
+            eye_v,
+            normal_v,
+            true,
+        );
+        let color_2 = lighting(
+            material,
+            light,
+            Point::new(1.1, 0.0, 0.0),
+            eye_v,
+            normal_v,
+            true,
+        );
+
+        assert_eq!(Color::white(), color_1);
+        assert_eq!(Color::black(), color_2);
     }
 }

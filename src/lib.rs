@@ -12,6 +12,7 @@ pub mod lighting;
 pub mod material;
 pub mod matrix;
 pub mod object;
+pub mod pattern;
 pub mod point;
 pub mod ppm_writer;
 pub mod ray;

@@ -1,6 +1,7 @@
 use crate::color::Color;
 use crate::point::Point;
 
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct StripeProperties {
     first_stripe: Color,
     second_stripe: Color,
