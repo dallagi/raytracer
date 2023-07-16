@@ -1,13 +1,13 @@
 use crate::color::Color;
 use crate::light::Light;
-use crate::material::Material;
+use crate::object::Object;
 use crate::point::Point;
 use crate::vector::Vector;
 
 /// Implementation of the Phong reflection model
 /// See also https://en.wikipedia.org/wiki/Phong_reflection_model
 pub fn lighting(
-    material: Material,
+    intersected_object: Object,
     light: Light,
     position: Point,
     eye_vector: Vector,
@@ -15,12 +15,13 @@ pub fn lighting(
     in_shadow: bool,
 ) -> Color {
     // combine the surface color with the light's color/intensity
-    let effective_color = material.pattern.object_color_at(position) * light.intensity;
+    let effective_color = intersected_object.object_color_at(position) * light.intensity;
 
     // direction to the light source
     let light_vector = (light.position - position).normalize();
 
     // ambient contribution
+    let material = intersected_object.material;
     let ambient = effective_color * material.ambient;
 
     if in_shadow {
@@ -58,6 +59,8 @@ pub fn lighting(
 #[cfg(test)]
 mod tests {
 
+    use crate::material::Material;
+    use crate::matrix::Matrix;
     use crate::pattern::Pattern;
 
     use super::*;
@@ -67,13 +70,13 @@ mod tests {
     #[test]
     fn test_lighting_with_eye_between_light_and_surface() {
         // ambient, diffuse and specular components at full strength
-        let material = Material::default();
+        let object = Object::default();
         let position = Point::origin();
         let eye_v = Vector::new(0.0, 0.0, -1.0);
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(material, light, position, eye_v, normal_v, false);
+        let result = lighting(object, light, position, eye_v, normal_v, false);
 
         assert_eq!(Color::new(1.9, 1.9, 1.9), result);
     }
@@ -81,13 +84,13 @@ mod tests {
     #[test]
     fn lighting_with_eye_between_light_and_surface_with_eye_offset_45_degrees() {
         // specular component at roughly zero, ambient and diffuse at full strength
-        let material = Material::default();
+        let object = Object::default();
         let position = Point::origin();
         let eye_v = Vector::new(0.0, (2.0_f64).sqrt() / 2.0, -(2.0_f64).sqrt() / 2.0);
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(material, light, position, eye_v, normal_v, false);
+        let result = lighting(object, light, position, eye_v, normal_v, false);
 
         assert_eq!(Color::new(1.0, 1.0, 1.0), result);
     }
@@ -95,13 +98,13 @@ mod tests {
     #[test]
     fn lighting_with_eye_opposite_surface_light_offset_45() {
         // specular component at roughly zero
-        let material = Material::default();
+        let object = Object::default();
         let position = Point::origin();
         let eye_v = Vector::new(0.0, 0.0, -1.0);
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 10.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(material, light, position, eye_v, normal_v, false);
+        let result = lighting(object, light, position, eye_v, normal_v, false);
 
         assert_eq!(Color::new(0.7364, 0.7364, 0.7364), result);
     }
@@ -109,13 +112,13 @@ mod tests {
     #[test]
     fn lighting_with_eye_in_path_of_reflection_vector() {
         // specular component at full strength, ambient and diffuse same as previous test
-        let material = Material::default();
+        let object = Object::default();
         let position = Point::origin();
         let eyev = Vector::new(0.0, -(2.0_f64).sqrt() / 2.0, -(2.0_f64).sqrt() / 2.0);
         let normalv = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 10.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(material, light, position, eyev, normalv, false);
+        let result = lighting(object, light, position, eyev, normalv, false);
 
         assert_eq!(Color::new(1.63638, 1.63638, 1.63638), result);
     }
@@ -123,13 +126,13 @@ mod tests {
     #[test]
     fn lighting_with_light_behind_surface() {
         // in this case only the ambient lighting will be considered
-        let material = Material::default();
+        let object = Object::default();
         let position = Point::origin();
         let eye_v = Vector::new(0.0, 0.0, -1.0);
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 0.0, 10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(material, light, position, eye_v, normal_v, false);
+        let result = lighting(object, light, position, eye_v, normal_v, false);
 
         assert_eq!(Color::new(0.1, 0.1, 0.1), result);
     }
@@ -137,33 +140,37 @@ mod tests {
     #[test]
     fn test_lighting_with_surface_in_shadow() {
         // in this case only ambient contribution is considered
-        let material = Material::default();
+        let object = Object::default();
         let position = Point::origin();
         let eye_v = Vector::new(0.0, 0.0, -1.0);
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
-        let result = lighting(material, light, position, eye_v, normal_v, true);
+        let result = lighting(object, light, position, eye_v, normal_v, true);
 
         assert_eq!(Color::new(0.1, 0.1, 0.1), result);
     }
 
     #[test]
-    fn test_lighting_with_non_solid_pattern_on_object_material() {
+    fn test_lighting_with_a_stripe_pattern_will_set_different_color_depending_on_position() {
         let material = Material {
-            pattern: Pattern::stripe(Color::white(), Color::black()),
+            pattern: Pattern::stripe(Color::white(), Color::black(), Matrix::identity()),
             // keep only ambient contribution to make it easier to test pattern
             ambient: 1.0,
             diffuse: 0.0,
             specular: 0.0,
             ..Material::default()
         };
+        let object = Object {
+            material,
+            ..Object::default()
+        };
         let eye_v = Vector::new(0.0, 0.0, -1.0);
         let normal_v = Vector::new(0.0, 0.0, -1.0);
         let light = Light::new(Point::new(0.0, 0.0, -10.0), Color::new(1.0, 1.0, 1.0));
 
         let color_1 = lighting(
-            material,
+            object,
             light,
             Point::new(0.9, 0.0, 0.0),
             eye_v,
@@ -171,7 +178,7 @@ mod tests {
             true,
         );
         let color_2 = lighting(
-            material,
+            object,
             light,
             Point::new(1.1, 0.0, 0.0),
             eye_v,

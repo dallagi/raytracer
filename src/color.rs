@@ -21,6 +21,10 @@ impl Color {
         Color::new(1.0, 1.0, 1.0)
     }
 
+    pub fn red() -> Self {
+        Color::new(1.0, 0.0, 0.0)
+    }
+
     /// Scale color values between `min` and `max`
     pub fn scale(&self, min: f64, max: f64) -> Self {
         Self {

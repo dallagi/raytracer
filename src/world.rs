@@ -63,7 +63,7 @@ impl World {
 
         for light in self.lights.iter() {
             color += lighting(
-                intersection_state.object.material,
+                intersection_state.object,
                 *light,
                 intersection_state.point,
                 intersection_state.eye_v,

@@ -4,9 +4,9 @@ A simple raytracer, built following [The Raytracer Challenge](http://raytracerch
 
 Implemented from scratch with zero external dependencies (except for test helpers).
 
-Current progress: _it can render a simple scene with spheres and cast shadows_.
+Current progress: _it can render a simple scene with spheres, stripe patterns and shadows_.
 
-![rendered sphere](https://raw.githubusercontent.com/dallagi/raytracer/main/examples/out/scene.png)
+![rendered sphere](https://raw.githubusercontent.com/dallagi/raytracer/main/examples/out/patterns.png)
 
 ## Run the examples
 
@@ -15,7 +15,7 @@ This project requires rust nightly.
 Run an example with:
 
 ```bash
-cargo run --release --example scene
+cargo run --release --example patterns
 ```
 
 The rendered image will be saved in the `examples/out/` directory in the PPM format.

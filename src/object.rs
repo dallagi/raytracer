@@ -21,6 +21,14 @@ impl Object {
         }
     }
 
+    pub fn plane(transformation: Matrix<4, 4>, material: Material) -> Self {
+        Self {
+            transformation,
+            material,
+            shape: Shape::Plane,
+        }
+    }
+
     pub fn normal_at(self, world_point: Point) -> Vector {
         let inverse_transformation = self.transformation.inverse();
         let object_point = inverse_transformation * world_point;
@@ -32,7 +40,7 @@ impl Object {
     }
 
     pub fn object_color_at(self, point: Point) -> Color {
-        todo!()
+        self.material.pattern.object_color_at(self, point)
     }
 }
 
@@ -122,7 +130,7 @@ mod tests {
     fn material_pattern_is_transformed_together_with_object() {
         let transformation = transformations::scaling(2.0, 2.0, 2.0);
         let material = Material {
-            pattern: Pattern::stripe(Color::white(), Color::black()),
+            pattern: Pattern::stripe(Color::white(), Color::black(), Matrix::identity()),
             ..Material::default()
         };
 
