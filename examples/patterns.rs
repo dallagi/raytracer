@@ -39,7 +39,7 @@ fn main() {
         ),
     );
 
-    let canvas = camera.render(world);
+    let canvas = camera.render_parallel(world, None);
 
     let out_path = "examples/out/patterns.ppm";
     let file = File::create(out_path).expect("Failed to create file");

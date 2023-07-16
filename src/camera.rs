@@ -1,3 +1,7 @@
+use std::num::NonZeroUsize;
+use std::sync::{Arc, Mutex};
+use std::thread;
+
 use crate::canvas::Canvas;
 use crate::matrix::Matrix;
 use crate::point::Point;
@@ -68,6 +72,50 @@ impl Camera {
 
         println!("\nDone.");
         image
+    }
+
+    pub fn render_parallel(&self, world: World, num_threads: Option<NonZeroUsize>) -> Canvas {
+        let num_threads = num_threads.unwrap_or_else(|| thread::available_parallelism().unwrap());
+        let num_threads = usize::from(num_threads);
+
+        // each thread will handle a horizontal stripe of the image
+        let chunk_size = self.vsize / num_threads;
+        let last_iteration = num_threads - 1;
+        let canvas = Arc::new(Mutex::new(Canvas::new(self.hsize, self.vsize)));
+
+        thread::scope(|scope| {
+            let mut handles = vec![];
+
+            for i in 0..num_threads.into() {
+                let hsize = self.hsize;
+                let canvas = canvas.clone();
+                let world_ref = &world;
+
+                let handle = scope.spawn(move || {
+                    let chunk_start = i * chunk_size;
+
+                    let chunk_end = if i == last_iteration {
+                        self.vsize
+                    } else {
+                        chunk_start + chunk_size
+                    };
+
+                    for y in chunk_start..chunk_end {
+                        for x in 0..hsize {
+                            let ray = self.ray_for_pixel(x, y);
+                            let color = world_ref.color_at_intersection_with(ray);
+                            {
+                                let mut canvas = canvas.lock().unwrap();
+                                canvas.write_pixel(x, y, color);
+                            }
+                        }
+                    }
+                });
+                handles.push(handle);
+            }
+        });
+
+        Arc::try_unwrap(canvas).unwrap().into_inner().unwrap()
     }
 
     fn print_progress(&self, y: usize) {
