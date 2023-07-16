@@ -1,3 +1,4 @@
+use crate::color::Color;
 use crate::material::Material;
 use crate::matrix::Matrix;
 use crate::point::Point;
@@ -29,6 +30,10 @@ impl Object {
         let world_normal = inverse_transformation.transpose() * object_normal;
         world_normal.normalize()
     }
+
+    pub fn object_color_at(self, point: Point) -> Color {
+        todo!()
+    }
 }
 
 impl Default for Object {
@@ -41,7 +46,9 @@ impl Default for Object {
 mod tests {
     use std::f64::consts::PI;
 
+    use crate::color::Color;
     use crate::matrix::transformations;
+    use crate::pattern::Pattern;
 
     use super::*;
     use pretty_assertions::assert_eq;
@@ -109,5 +116,18 @@ mod tests {
         object.material = material;
 
         assert_eq!(material, object.material);
+    }
+
+    #[test]
+    fn material_pattern_is_transformed_together_with_object() {
+        let transformation = transformations::scaling(2.0, 2.0, 2.0);
+        let material = Material {
+            pattern: Pattern::stripe(Color::white(), Color::black()),
+            ..Material::default()
+        };
+
+        let object = Object::sphere(transformation, material);
+
+        let color = object.object_color_at(Point::new(1.5, 0.0, 0.0));
     }
 }

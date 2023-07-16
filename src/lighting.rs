@@ -15,7 +15,7 @@ pub fn lighting(
     in_shadow: bool,
 ) -> Color {
     // combine the surface color with the light's color/intensity
-    let effective_color = material.pattern.color_at(position) * light.intensity;
+    let effective_color = material.pattern.object_color_at(position) * light.intensity;
 
     // direction to the light source
     let light_vector = (light.position - position).normalize();

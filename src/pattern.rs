@@ -19,10 +19,11 @@ impl Pattern {
         Pattern::Stripe(StripeProperties::new(first_color, second_color))
     }
 
-    pub fn color_at(&self, point: Point) -> Color {
+    /// Color of pattern at point in object space
+    pub fn object_color_at(&self, point: Point) -> Color {
         match self {
             Pattern::Solid(color) => *color,
-            Pattern::Stripe(stripe_properties) => stripe_properties.stripe_at(point),
+            Pattern::Stripe(stripe_properties) => stripe_properties.object_color_at(point),
         }
     }
 }
