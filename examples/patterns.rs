@@ -104,7 +104,6 @@ fn left_wall() -> Object {
     Object::plane(
         transformations::rotation_x(PI / 2.0)
             >> transformations::rotation_y(-PI / 4.0)
-            >> transformations::rotation_y(-PI)
             >> transformations::translation(0.0, 0.0, 5.0),
         wall_material(),
     )
@@ -114,7 +113,6 @@ fn right_wall() -> Object {
     Object::plane(
         transformations::rotation_x(PI / 2.0)
             >> transformations::rotation_y(PI / 4.0)
-            >> transformations::rotation_y(PI)
             >> transformations::translation(0.0, 0.0, 5.0),
         wall_material(),
     )

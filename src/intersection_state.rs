@@ -31,7 +31,6 @@ impl IntersectionState {
 
         let eye_v = -ray.direction;
         let mut normal_v = object.normal_at(point);
-        let over_point = point + normal_v * EPSILON;
 
         let mut inside = false;
 
@@ -40,6 +39,8 @@ impl IntersectionState {
             // reverse the normal, since we're inside the object
             normal_v = -normal_v;
         }
+
+        let over_point = point + normal_v * EPSILON;
 
         Self {
             t,
